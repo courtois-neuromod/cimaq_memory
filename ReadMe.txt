@@ -7,10 +7,10 @@ more details on the scripts and files they contain.
 
 Contains the cimaq_convert_eprime_to_bids_event.py script
 and supporting documents.
-The script converts .txt files outputed by eprime into .tsv event
+The script converts .txt files outputed by eprime into .tsv "event"
 files compatible with Nistats/Nilearn (to label fMRI frames
 based on condition (encoding vs control task) and task performance,
-e.g., subsequent image and source recognition)
+(e.g., subsequent recognition of image and its on-screen position)
 NOTE: Data to test the script can be found here:
 https://www.dropbox.com/sh/1ijtytsqu3zghec/AAAnzupem2TA45EGyW9QpuH9a?dl=0
 
@@ -52,11 +52,12 @@ Also generates a table of motion metrics for all participants.
 each map reflects the modeling of the hemodynamic response
 (spm model; in Nistats) for a single trial.
 
-- CIMAQ_getBetaMaps.ipynb: jupyter notebook detailing how beta maps
-are computer in a single participant
+- CIMAQ_getBetaMaps.ipynb: jupyter notebook detailing how to
+compute beta maps, using a single participant as an example.
 
 - CIMAQ_getNetworkFeatures.ipynb: jupyter notebook detailing how
-network activation features are computed in a single participant
+to compute network activation features, using a single participant
+as an example.
 
 
 4. models directory (WIP)
