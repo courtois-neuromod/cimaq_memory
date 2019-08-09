@@ -225,7 +225,7 @@ def extract_events(taskFile, id, outdir, scanDur):
 
     return tData
 
-def sub_tcontrasts1(id, tr, frames_times, hrf_model, confounds,
+def sub_tcontrasts1(id, tr, frame_times, hrf_model, confounds,
 all_events, fmri_img, sub_outdir):
     """Uses nistats first-level model to create maps of beta values
     that correspond to the following contrasts between conditions:
@@ -290,7 +290,7 @@ all_events, fmri_img, sub_outdir):
 
     return
 
-def sub_tcontrasts2(id, tr, frames_times, hrf_model, confounds,
+def sub_tcontrasts2(id, tr, frame_times, hrf_model, confounds,
 all_events, fmri_img, sub_outdir):
     """Uses nistats first-level model to create maps of beta values
     that correspond to the following contrasts between conditions:
@@ -370,7 +370,7 @@ all_events, fmri_img, sub_outdir):
 
     return
 
-def sub_tcontrasts3(id, tr, frames_times, hrf_model, confounds,
+def sub_tcontrasts3(id, tr, frame_times, hrf_model, confounds,
 all_events, fmri_img, sub_outdir):
     """Uses nistats first-level model to create maps of beta values
     that correspond to the following contrasts between conditions:
@@ -582,13 +582,13 @@ def get_subject_betas(id, confounds, all_events, fmridir, outdir):
 
         #Create beta maps for task contrasts
         #Encoding & control task
-        sub_tcontrasts1(id, tr, frames_times, hrf_model, confounds,
+        sub_tcontrasts1(id, tr, frame_times, hrf_model, confounds,
         all_events, fmri_img, tc_outdir)
         #Control, hit and miss
-        sub_tcontrasts2(id, tr, frames_times, hrf_model, confounds,
+        sub_tcontrasts2(id, tr, frame_times, hrf_model, confounds,
         all_events, fmri_img, tc_outdir)
         #Control, miss, wrong source and correct source
-        sub_tcontrasts3(id, tr, frames_times, hrf_model, confounds,
+        sub_tcontrasts3(id, tr, frame_times, hrf_model, confounds,
         all_events, fmri_img, tc_outdir)
 
     return
@@ -629,8 +629,8 @@ def main():
     motion_dir = args.mdir[0]
     fmri_dir = args.fdir[0]
     output_dir = os.path.join(args.odir[0], 'Output')
-    if not os.path.exists(out_dir):
-        os.mkdir(out_dir)
+    if not os.path.exists(output_dir):
+        os.mkdir(output_dir)
     extract_betas(task_files, output_dir, motion_dir, fmri_dir)
 
 if __name__ == '__main__':
