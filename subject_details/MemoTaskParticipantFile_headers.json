@@ -84,7 +84,7 @@ var cimaq_memotask_participants_headers = {
     types of dementia (e.g., degenerative vs vascular)"
   },
   "GDS":{
-    "Description": "Geriatric depression scale, neuropsych test score"
+    "Description": "Geriatric depression scale, neuropsych test score; max of 30 (high = depressed)"
   },
   "LogicalMemTest_delRecall":{
     "Description": "Logical Memory test - delayed recall, neuropsych test
