@@ -1,0 +1,260 @@
+var cimaq_memotask_participants_headers = {
+  "participant_id": {
+    "Description": "6-digit Loris DDCID identifier"
+  },
+  "cognitive_status": {
+    "Description": "Controls = cognitively normal, SCD = subjective cognitive decline,
+    MCI = mild cognitive impairment"
+  },
+  "clinical_age_month": {
+    "Description": "age at the time of testing, in months"
+  },
+  "schooling": {
+    "Description":"years of schooling"
+  },
+  "sex": {
+    "Description":"male or female gender"
+  },
+  "APOE_carrier":{
+    "Description":"1 = carrier, 0 = non-carrier"
+  },
+  "task_randomization": {
+    "Description":"one of the four orders of encoding and control trials,
+    labelled A, B, C and D. Note that image order can vary within condition
+    within the same version (e.g., the image shown for the 2nd encoding trial
+    can vary between two subjects tested on version A)"
+  },
+  "QC_status":{
+    "Description": "F = failed, otherwise blank"
+  },
+  "total_frames":{
+    "Description": "number of epi images (fMRI frames) acquired
+    for the memory task scan; 310 = full scan"
+  },
+  "total_scrubbed_frames":{
+    "Description": "number of epi frames flagged as motion outliers
+    during preprocessing; can be regressed out of first-level analyses"
+  },
+  "mean_motion_tx":{
+    "Description": "average tx motion : absolute value of translation along x-axis (left to right),
+    in cm, estimated during preprocessing"
+  },
+  "mean_motion_ty":{
+    "Description": "average ty motion : absolute value of translation along y-axis (forward and backward),
+    in cm, estimated during preprocessing"
+  },
+  "mean_motion_tz":{
+    "Description": "average tz motion : absolute value of translation along z-axis (up and down),
+    in cm, estimated during preprocessing"
+  },
+  "mean_motion_rx":{
+    "Description": "average rx motion : absolute value of pitch rotation, in cm,
+    estimated during preprocessing"
+  },
+  "mean_motion_ry":{
+    "Description": "average ry motion : absolute value of roll rotation, in cm,
+    estimated during preprocessing"
+  },
+  "mean_motion_rz":{
+    "Description": "average rz motion : absolute value of yaw rotation, in cm,
+    estimated during preprocessing"
+  },
+  "mean_FD":{
+    "Description": "mean frame displacement, in cm, estimated
+    during preprocessing"
+  },
+  "mean_white_matt_sig":{
+    "Description": "mean white matter signal averaged across epi frames"
+  },
+  "mean_ventri_sig":{
+    "Description": "mean ventricular signal averaged across epi frames"
+  },
+  "prenom_visage_rappel_immediat":{
+    "Description": "neuropsych score on the Montreal Cognitive Assessment test (
+    rapid screening for cognitive impairment)"
+  },
+  "MoCA":{
+    "Description": "neuropsych score on the Montreal Cognitive Assessment test (
+    rapid screening for cognitive impairment)"
+  },
+  "CDR-SB":{
+    "Description": "neuropsych test score on the Clinical Demential Rating Scale
+    Sum of Boxes, to quantify stage of dementia.
+    0 = normal, 0.5 = very mild dementia, 1 = mild, 2 = moderate,
+    3 = severe dementia"
+  },
+  "Hachinski":{
+    "Description": "Hachinski's ischemic score scale, used to differentiate
+    types of dementia (e.g., degenerative vs vascular)"
+  },
+  "GDS":{
+    "Description": "Geriatric depression scale, neuropsych test score; max of 30 (high = depressed)"
+  },
+  "LogicalMemTest_delRecall":{
+    "Description": "Logical Memory test - delayed recall, neuropsych test
+    where participants are read a logically organized story and asked to recall it
+    from memory immediately, and after a 20 minutes delay (delayed recall).
+    Points are given for accurately recalled story elements."
+  },
+  "RAVLT_trial1":{
+    "Description": "Rey Auditory Verbal Learning Test, trial 1;
+    neuropsych test where participants are read a list of 15 words
+    they need to recall; the test includes 5 initial learning trials where the same words
+    are read and immediately recalled, a delayed recall condition, and a recognition test
+    where learned words are recognized among lure words.
+    Trial 1 = number of words recalled on the first trial (out of 15)"
+  },
+  "RAVT_total":{
+    "Description": "Sum of words recalled across all 5 RAVLT learning trials (out of 5 x 15)"
+  },
+  "RAVLT_delRecall":{
+    "Description": "Sum of RAVLT words recalled after a delay (out of 15)"
+  },
+  "RAVLT_recognition":{
+    "Description": "RAVLT recognition test: participant must correctly recognize
+    learned words (from the learned RAVLT list) and correcty rejected lure (novel) words.
+    Number of correct rejections (out of 50)."
+  },
+  "Stroop_cond3_time":{
+    "Description": "Stroop condition 3 time, neuropsych test score"
+  },
+  "Stroop_cond3_corr_errors":{
+    "Description": "Stroop condition 3 corrected errors, neuropsych test of ability to
+    inhibit cognitive interference"
+  },
+  "Stroop_cond3_nonCorr_errors":{
+    "Description": "Stroop condition 3 non-corrected errors, neuropsych test score"
+  },
+  "Stroop_cond4_time":{
+    "Description": "Stroop condition 4 time, neuropsych test score"
+  },
+  "Stroop_cond4_corr_errors":{
+    "Description": "Stroop condition 4 corrected errors, neuropsych test score"
+  },
+  "Stroop_cond4_nonCorr_errors":{
+    "Description": "Stroop condition 4 non-corrected errors"
+  },
+  "TrialA_time":{
+    "Description": "Trail Making Test (test of visual attention and task switching) ;
+    Trail A time to complete, in seconds (no switching: baseline)"
+  },
+  "TrialB_time":{
+    "Description": "Trail Making Test (test of visual attention and task switching) ;
+    Trail B time to complete, in seconds (task switching)"
+  },
+  "Boston_naming":{
+    "Description": "neuropsych test of confrontational name retrieval
+    (participants must correctly name objects from 60 line drawings)"
+  },
+  "hits":{
+    "Description": "number of trials where an image shown in the scanner
+    was recognized as 'OLD' during the post-scan test; out of 78"
+  },
+  "miss":{
+    "Description": "number of trials where an image shown in the scanner
+    was wrongly categorized as 'New' (failed to recognize) during the post-scan
+    test; out of 78"
+  },
+  "false_alarms":{
+    "Description": "number of trials where a novel image not shown in the scanner
+    was wrongly categorized as 'OLD' during the post-scan test; out of 39"
+  },
+  "correct_rej":{
+    "Description": "number of trials where a novel image not shown in the scanner
+    was correctly categorized as 'New' during the post-scan test; out of 39"
+  },
+  "old":{
+    "Description": "number of trials testing an old image shown in the scanner;
+    should be 78"
+  },
+  "new":{
+    "Description": "number of trials testing a novel image not shown in the scanner;
+    should be 39"
+  },
+  "Hits_minus_FA":{
+    "Description": "hits minus false alarms performance score,
+    adjusted for unbalanced number of old and new trials;
+    score = (hits/old) - (FA/new)"
+  },
+  "Z_probabHit":{
+    "Description": "normalized (z) score associated with the hit score's
+    probability (hits/old ratio); if hits / old = 0.5, z = 0"
+  },
+  "Z_probabFA":{
+    "Description": "normalized (z) score associated with the FA score's
+    probability (FA/new ratio); if FA / new = 0.5, z = 0"
+  },
+  "dprime":{
+    "Description": "normalized metric of memory recognition performance
+    accounting for hit and false alarm rates;
+    dprime = Z_probabHit - Z_probabFA; 0 = chance level"
+  },
+  "correct_source":{
+    "Description": "total number of trials for which an old image
+    (shown in the scanner) was correctly recognized as 'old', and
+    positionned within the correct quadrant, out of a maximum of 78"
+  },
+  "wrong_source":{
+    "Description": "total number of trials for which an old image
+    (shown in the scanner) was correctly recognized as 'old', but
+    was uncorrectly positionned within the wrong quadrant, out of a maximum of 78"
+  },
+  "associative_memScore":{
+    "Description": "score of associative memory performance adjusted
+    for the number of false alarms;
+    score = correct_source/(wrong_source+false_alarms)"
+  },
+  "rt_reco_CR":{
+    "Description": "mean reaction time to provide recognition ('old' or 'new')
+    answer for correctly rejected (CR) trials"
+  },
+  "rt_reco_FA":{
+    "Description": "mean reaction time to provide recognition ('old' or 'new')
+    answer for false alarms trials"
+  },
+  "rt_reco_Hit":{
+    "Description": "mean reaction time to provide recognition ('old' or 'new')
+    answer for hit trials"
+  },
+  "rt_reco_Miss":{
+    "Description": "mean reaction time to provide recognition ('old' or 'new')
+    answer for miss trials"
+  },
+  "rt_reco_New":{
+    "Description": "mean reaction time to provide recognition ('old' or 'new')
+    answer for 'new' trials (image not shown in scanner), regardless of response accuracy"
+  },
+  "rt_reco_Old":{
+    "Description": "mean reaction time to provide recognition ('old' or 'new')
+    answer for 'old' trials (image show in scanner), regardless of response accuracy"
+  },
+  "rt_reco_wrongSource":{
+    "Description": "mean reaction time to provide recognition ('old' or 'new')
+    answer for 'old' trials for which the image was recognized as old,
+    but positioned in the wrong quadrant"
+  },
+  "rt_reco_correctSource":{
+    "Description": "mean reaction time to provide recognition ('old' or 'new')
+    answer for 'old' trials for which the image was recognized as old
+    and positioned in the correct quadrant"
+  },
+  "rt_source_FA":{
+    "Description": "mean reaction time to provide source answer
+    (in which of 4 quadrants was the image show?) for false alarm trials
+    (new image wrongly identified as old)"
+  },
+  "rt_source_Hit":{
+    "Description": "mean reaction time to provide source answer
+    (in which of 4 quadrants was the image show?) for hit trials
+    (old image correctly identified as old)"
+  },
+  "rt_source_wrongSource":{
+    "Description": "mean reaction time to provide source answer
+    (in which of 4 quadrants was the image show?) for hit trials with
+    incorrect source answers"
+  },
+  "rt_source_correctSource":{
+    "Description": "mean reaction time to provide source answer
+    (in which of 4 quadrants was the image show?) for hit trials with
+    correct source answers"  }
+}
