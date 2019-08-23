@@ -86,12 +86,12 @@ var cimaq_memotask_participants_headers = {
     measure for cognitive impairment"
   },
   "moca_score":{
-    "Description": "Cognitive function, high score = good.
+    "Description": "Cognitive function, high score = good performance.
     Unadjusted score on the Montreal Cognitive Assessment (MoCA) test
     (rapid screening for cognitive impairment"
   },
   "moca_score_schooling":{
-    "Description": "Cognitive function, high score = good.
+    "Description": "Cognitive function, high score = good performance.
     Score on the Montreal Cognitive Assessment (MoCA) test,
     adjusted for years of schooling (based on norms)"
   },
@@ -99,8 +99,12 @@ var cimaq_memotask_participants_headers = {
     "Description": "Depression, high score = depressed.
     Geriatric depression scale, neuropsych test score; max of 30"
   },
-  "INSERT_WAIS_digit_symbol":{
-    "Description": "WAISIIIadd description"
+  "WAIS_digit_symbol_total":{
+    "Description": "Speed and cognitive function, high score = good performance.
+    Code Digit-Symbol test from WAIS-III.
+    Number of correctly copied symbols (max 133). Within 120s, participants
+    must copy symbols paired with digits (1-9) within a grid. The correct symbol
+    must be copied in the case under its corresponding number."
   },
   "trailA_time":{
     "Description": "Visual attention, high score = poor performance.
@@ -119,36 +123,48 @@ var cimaq_memotask_participants_headers = {
     switching cost (poor performance). Ratio between the times to complete
     Trail B/Trail A of the Trail Making Test."
   },
-  "INSERT_Stroop_cond3_time":{
-    "Description": "Selective attention, high score = poor performance.
-    Stroop test, condition 3 (inhibition). Time (in seconds) taken by participants
-    to name the colour in which a list of incongruent colour-words are printed
+  "Stroop_cond3_time":{
+    "Description": "Selective attention & inhibition of cognitive interference,
+    high score = poor performance. Stroop test, condition 3 (inhibition).
+    Time (in seconds) taken by participants to name the colour in which a list
+    of incongruent colour-words are printed
     (e.g., if the word 'green' is printed in red, say 'red')."
   },
-  "INSERT_Stroop_cond3_corr_errors":{
-    "Description": "Selective attention, high score = poor performance.
-    Number of errors (self-corrected by the participant) made  by participants to name the colour in which a list of
-    incongruent colour-words are printedn (e.g., if the word 'green' is printed
-    in red, say 'red').
-    Stroop condition 3 corrected errors, neuropsych test of ability to
-    inhibit cognitive interference"
+  "Stroop_cond3_corr_errors":{
+    "Description": "Selective attention & inhibition of cognitive interference,
+    high score = poor performance. Stroop test, condition 3 (inhibition).
+    Number of errors (self-corrected by the participant) made while naming
+    the colour in which incongruent colour-words are printed
+    (e.g., if the word 'green' is printed in red, say 'red')."
   },
-  "INSERT_Stroop_cond3_nonCorr_errors":{
-    "Description": "Stroop condition 3 non-corrected errors, neuropsych test score"
+  "Stroop_cond3_nonCorr_errors":{
+    "Description": "Selective attention & inhibition of cognitive interference,
+    high score = poor performance. Stroop test, condition 3 (inhibition).
+    Number of errors (uncorrected by the participant) made while naming
+    the colour in which incongruent colour-words are printed
+    (e.g., if the word 'green' is printed in red, say 'red')."
   },
-  "INSERT_Stroop_cond4_time":{
-    "Description": "Selective attention and cognitive flexibility, high score = poor performance
+  "Stroop_cond4_time":{
+    "Description": "Selective attention and cognitive flexibility, high score = poor performance.
     Stroop test, condition 4 (inhibition/alternance). Time (in seconds) taken by participants
-    to name either the colour in which a list of incongruent colour-words are printed,
+    to either name the colour in which incongruent colour-words are printed,
     or read those words if they are contained within a box.
     (e.g., if the word 'green' is printed in red, say 'red' if it is unboxed,
     and 'green' if it is boxed)."
   },
-  "INSERT_Stroop_cond4_corr_errors":{
-    "Description": "Stroop condition 4 corrected errors, neuropsych test score"
+  "Stroop_cond4_corr_errors":{
+    "Description": "Selective attention and cognitive flexibility, high score = poor performance.
+    Stroop test, condition 4 (inhibition/alternance). Number of errors (self-corrected
+    by the participant) made while either naming the colour in which incongruent colour-words are
+    printed, or reading these words if they are contained in a box (e.g., if the word 'green'
+    is printed in red, say 'red' if it is unboxed, and 'green' if it is boxed)."
   },
-  "INSERT_Stroop_cond4_nonCorr_errors":{
-    "Description": "Stroop condition 4 non-corrected errors"
+  "Stroop_cond4_nonCorr_errors":{
+    "Description": "Selective attention and cognitive flexibility, high score = poor performance.
+    Stroop test, condition 4 (inhibition/alternance). Number of errors (uncorrected
+    by the participant) made while either naming the colour in which incongruent colour-words are
+    printed, or reading these words if they are contained in a box (e.g., if the word 'green'
+    is printed in red, say 'red' if it is unboxed, and 'green' if it is boxed)."
   },
   "easy_object_decision_score":{
     "Description": "Semantic knowledge, high score = good performance.
@@ -166,31 +182,69 @@ var cimaq_memotask_participants_headers = {
     Participants must correctly name objects from 60 line drawings.
     Number of correctly named objects (spontaneously or after semantic cueing), out of 60."
   },
-  "INSERT_WAIS_vocabulary":{
+  "WAIS_vocabulary":{
     "Description": "Vocabulary, high score = good performance.
-    WAISIII vocab, add description"
+    WAIS-III vocabulary sub-test (related to verbal IQ).
+    Participant gives a verbal definition of up to 33 words for which
+    they receive 0-2 points. The test stops when 6 consecutive words
+    get a definition that receive 0 points (max 66 points)."
   },
   "verb_flu_correct_responses":{
     "Description": "Verbal fluency, high score = good performance.
     Total number of animals named within 60 seconds. "
   },
-  "aspan_rappel_item_reussis":{
-    "Description": ""
+  "aspan_recall_correct_items":{
+    "Description": "Verbal working memory, high score = good performance.
+    Alpha-span, alphabetical recall. Total number of words recalled (alphabetized) over 5 attempts.
+    Participants are read 5 short lists of words (1 word/sec, list not alphabetized).
+    After hearing each list, participants must recall the words in alphabetical order.
+    The number of words per list (between 3 and 6) is matched to the participant's 'span',
+    the number of words they can hold in mind and recall in sequential order."
   },
-  "aspan_rappel_pourcentage":{
-    "Description": ""
+  "aspan_recall_percentage":{
+    "Description": "Verbal working memory, high score = good performance.
+    Alpha-span, alphabetical recall. Percentage of words recalled (alphabetized),
+    out of the total number of words read. Participants are read 5 short lists of
+    words (1 word/sec, list not alphabetized), which they must recall in alphabetical order.
+    The number of words per list (between 3 and 6) is matched to the participant's 'span'.
+    The total number of words read is therefore between (3*5 = 15, and 6*5=30),
+    depending on the participant."
   },
-  "env_memoire_prospective":{
-    "Description": ""
+  "env_prospective_memory":{
+    "Description": "Prospective memory, high score = good performance.
+    Participants are instructed to perform two actions (seal letter and write
+    initials on flap) when, 10 minutes later, they will be asked to write
+    a name and address on an enveloppe. Max of two points (one per action
+    performed) if the actions are performed spontaneously witout any prompting."
   },
-  "env_memoire_retrospective":{
-    "Description": ""
+  "env_retrospective_memory":{
+    "Description": "Retrospective memory, high score = good performance.
+    Participants are instructed to perform two actions (seal letter and write
+    initials on flap) when, 10 minutes later, they will be asked to write
+    a name and address on an enveloppe. Max of two points (one per action
+    performed) if the actions are performed (either with or without prompting,
+    'did you need to do anything else with this enveloppe?')."
   },
-  "memoria_libre_correct":{
-    "Description": ""
+  "memoria_free_correct":{
+    "Description": "Memory (free) recall, high score = good.
+    Rappel libre-indice - Memoria (semantic cueing).
+    Number of spontaneously recalled words (without semantic cueing).
+    Participants learn 15 words (each from a different semantic category)
+    written on a computer screen. When hearing a category, participants must
+    point silently to the word that matched the category (e.g., hears 'poisson',
+    points to 'carpe'). After a delay (participant counts backward), the participant must
+    recall the words that were written on the screen."
   },
-  "memoria_indice_correct":{
-    "Description": ""
+  "memoria_total_correct":{
+    "Description": "Memory (free and cued) recall, high score = good.
+    Rappel libre-indice - Memoria (semantic cueing).
+    Number of correctly recalled words (with and without semantic cueing).
+    Participants learn 15 words (each from a different semantic category)
+    written on a computer screen. When hearing a category, participants must
+    point silently to the word that matched the category (e.g., hears 'poisson',
+    points to 'carpe'). After a delay (participant counts backward), the participant must
+    recall the words that were written on the screen. If a word is forgotten,
+    participants are given its category as a semantic retrieval cue."
   },
   "name_face_immediate_recall":{
     "Description": "Associative memory, high score = good performance.
@@ -199,47 +253,83 @@ var cimaq_memotask_participants_headers = {
     faces they just learned."
   },
   "name_face_delayed_recall":{
-    "Description": "Associative memory, high score = good performance.
+    "Description": "Associative memory (delayed), high score = good performance.
     Number of names recalled (delayed) on the Prenom-Visage task.
     Participants must recall names associated with pictures of
     faces they learned 20 minutes ago."
   },
-  "INSERT_log_story_immediate_recall":{
+  "log_story_immediate_recall":{
     "Description": "Memory recall, high score = good memory.
     Number of accurately recalled story elements on the
-    Logical Memory test - immediate recall.
+    Logical Memory test - immediate recall (from Wechsler Memory Scale-III).
     Participants are read a logically organized story and asked to recall it
     from memory."
   },
   "log_story_delayed_recall":{
-    "Description": "Memory recall, high score = good memory.
+    "Description": "Memory recall (delayed), high score = good memory.
     Number of accurately recalled story elements on the
     Logical Memory test - delayed recall (after a 20 minutes delay).
     Participants are read a logically organized story and asked to recall it
     from memory."
   },
-  "INSERT_RAVLT_trial1":{
+  "RAVLT_trial1":{
     "Description": "Memory recall, high score = good performance.
-    Rey Auditory Verbal Learning Test, trial 1;
-    neuropsych test where participants are read a list of 15 words
-    they need to recall; the test includes 5 initial learning trials where the same words
-    are read and immediately recalled, a delayed recall condition, and a recognition test
-    where learned words are recognized among lure words.
-    Trial 1 = number of words recalled on the first trial (out of 15)"
+    Rey Auditory Verbal Learning Test, trial 1 (out of 5 trials).
+    Participants are read a list of 15 words they need to recall.
+    The test includes 5 initial learning trials where the same words
+    are read and immediately recalled (list A), learning from a new list (B),
+    a delayed recall condition (list A), and a recognition test where
+    learned words (list A) are recognized among lure words.
+    Trial 1 = number of words (out of 15) recalled on the first trial"
   },
-  "INSERT_RAVT_total":{
+  "RAVT_total":{
     "Description": "Memory recall, high score = good performance.
-    Sum of words recalled across all 5 RAVLT learning trials (out of 5 x 15)"
+    Rey Auditory Verbal Learning Test. Total number of words (list A) recalled
+    across learning trials 1 to 5 (max of 15words*5trials =  75)."
   },
-  "INSERT_RAVLT_delRecall":{
+  "RAVLT_delRecall":{
     "Description": "Memory recall (delayed), high score = good performance.
-    Sum of RAVLT words recalled after a delay (out of 15)"
+    Sum of Rey Auditory Verbal Learning Test words (list A) recalled after a 20 minutes
+    delay (out of 15 words)."
   },
-  "INSERT_RAVLT_recognition":{
+  "RAVLT_recognition":{
     "Description": "Memory recognition, high score = good performance.
-    RAVLT recognition test: participant must correctly recognize
-    learned words (from the learned RAVLT list) and correcty rejected lure (novel) words.
-    Number of correct rejections (out of 50)."
+    Rey Auditory Verbal Learning Test recognition test: participant must
+    correctly recognize the 15 words from the learned RAVLT list (list A)
+    and correcty rejected 35 lure (novel) words (out of 50)."
+  },
+  "Fac1_memory":{
+    "Description": "Latent factor 1 (memory): high score = good memory.
+    Score on latent factor 1 from PCA conducted on neuropsych
+    test scores from 103 participants (4 factors, scaled values, missing scores replaced
+    with mean, eigenvalue = 8.754, varimax orthogonal rotation).
+    High loadings for memory scores (RAVLT, logical memo, prenom-visage, memoria and enveloppe)
+    as well as moca and mmse."
+  },
+  "Fac2_semantics_and_taskSwitching":{
+    "Description": "Latent factor 2 (semantic memory and task switching): high score = good.
+    Scores on latent factor 2 from PCA conducted on neuropsych
+    test scores from 103 participants (4 factors, scaled values, missing scores replaced
+    with mean, eigenvalue = 2.455, varimax orthogonal rotation).
+    Negative loading on cdr_sb (high = more advanced dementia), trails B (not A) time
+    (high = bad performance) and Stroop times (high = bad performance),
+    positive loading on moca, digit-symbol, easy object decision, boston naming and verbal fluency."
+  },
+  "Fac3_CogInterference":{
+    "Description": "Latent factor 3 (cognitive interference): high score = bad performance.
+    Scores on latent factor 3 from PCA conducted on neuropsych
+    test scores from 103 participants (4 factors, scaled values, missing scores replaced
+    with mean, eigenvalue = 2.010, varimax orthogonal rotation).
+    Negative loading on mmse (high mmse = good), positive loading on
+    Stroop time and errors (high scores = bad performance)."
+  },
+  "Fac4_workMemo":{
+    "Description": "Latent factor 4 (working memory): high score = good performance.
+    Scores on latent factor 4 from PCA conducted on neuropsych
+    test scores from 103 participants (4 factors, scaled values, missing scores replaced
+    with mean, eigenvalue = 1.942, varimax orthogonal rotation).
+    High loading on alpha-span (high = good working memory) and on trail A (not B) time
+    (slow = cautious?)."
   },
   "hits":{
     "Description": "fMRI task. Number of trials where an image shown in the scanner
