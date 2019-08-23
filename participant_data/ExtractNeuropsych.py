@@ -81,21 +81,25 @@ def get_cols(tname):
     the tupple contains two lists of strings of equal length
     """
     switcher = {
-        'alpha_span': (['71233_rappel_alpha_item_reussis', '71233_rappel_alpha_pourcentage'], ['aspan_rappel_item_reussis', 'aspan_rappel_pourcentage']),
-        'boston_naming_test': (['57463_boston_score_correcte_spontanee', '57463_boston_score_total'],['boston_correcte_spontanee', 'boston_total']),
-        'easy_object_decision': (['45463_score'], ['easy_object_score']),
+        'alpha_span': (['71233_rappel_alpha_item_reussis', '71233_rappel_alpha_pourcentage'], ['aspan_recall_correct_items', 'aspan_recall_percentage']),
+        'boston_naming_test': (['57463_boston_score_correcte_spontanee', '57463_boston_score_total'],['boston_correct_spontaneous', 'boston_total']),
+        'easy_object_decision': (['45463_score'], ['easy_object_decision_score']),
         'echelle_depression_geriatrique': (['    d.70664_score'], ['gds_score']),
         'echelle_hachinski': (['86588_score'],['hachinski_score']),
         'evaluation_demence_clinique': (['34013_cdr_sb'], ['cdr_sb']),
         'fluence_verbale_animaux': (['    18057_score_reponse_correcte'], ['verb_flu_correct_responses']),
+        'histoire_logique_wechsler_rappel_immediat': (['24918_score_hist_rappel_immediat'],['log_story_immediate_recall']),
         'histoire_logique_wechsler_rappel_differe': (['40801_score_hist_rappel_differe'],['log_story_delayed_recall']),
-        'memoria': (['18087_score_libre_correcte', '18087_score_indice_correcte'],['memoria_libre_correct', 'memoria_indice_correct']),
-        'moca': (['12783_score', '12783_score_scolarite'], ['moca_score', 'moca_score_scolarite']),
-        'prenom_visage': (['33288_score_rappel_immediat', '33288_score_rappel_differe'], ['prenom_visage_rappel_immediat', 'prenom_visage_rappel_differe']),
-        'test_enveloppe': (['75344_score_memoire_prospective', '75344_score_memoire_retrospective'], ['env_memoire_prospective', 'env_memoire_retrospective']),
+        'memoria': (['18087_score_libre_correcte', '18087_score_indice_correcte'],['memoria_free_correct', 'memoria_indice_correct']),
+        'moca': (['12783_score', '12783_score_scolarite'], ['moca_score', 'moca_score_schooling']),
+        'prenom_visage': (['33288_score_rappel_immediat', '33288_score_rappel_differe'], ['name_face_immediate_recall', 'name_face_delayed_recall']),
+        'ravlt': (['86932_mots_justes_essai_1', '86932_mots_justes_essai_total1', '86932_mots_justes_rappel_diff_a', '86932_score_total_reconnaissance'], ['RAVLT_trial1', 'RAVLT_total', 'RAVLT_delRecall', 'RAVLT_recognition']),
+        'test_enveloppe': (['75344_score_memoire_prospective', '75344_score_memoire_retrospective'], ['env_prospective_memory', 'env_retrospective_memory']),
         'tmmse': (['80604_score_total'],['mmse_total']),
-        'trail_making_test': (['44695_temps_trailA', '44695_temps_trailB', '44695_ratio_trailB_trailA'],['trailA_time', 'trailB_time', 'trailB_trailA_ratio'])
-
+        'trail_making_test': (['44695_temps_trailA', '44695_temps_trailB', '44695_ratio_trailB_trailA'],['trailA_time', 'trailB_time', 'trailB_trailA_ratio']),
+        'stroop': (['77180_cond3_temps_total', '77180_cond3_total_erreurs_corrigees', '77180_cond3_total_erreurs_non_corrigees', '77180_cond4_temps_total', '77180_cond4_total_erreurs_corrigees', '77180_cond4_total_erreurs_non_corrigees'],['Stroop_cond3_time', 'Stroop_cond3_corr_errors', 'Stroop_cond3_nonCorr_errors', 'Stroop_cond4_time', 'Stroop_cond4_corr_errors', 'Stroop_cond4_nonCorr_errors']),
+        'vocabulaire': (['87625_score'],['WAIS_vocabulary']),
+        'wais_digit_symbol':(['12321_resultat_brut'],['WAIS_digit_symbol_total'])
     }
     return switcher.get(tname, ([], []))
 
@@ -108,8 +112,8 @@ def extract_npsych(ids, npsych, output):
     neuro_scores.insert(loc = 0, column = 'dccid', value = ids, allow_duplicates=False)
     neuro_scores.set_index('dccid', inplace = True)
 
-    iso_list = ['alpha_span', 'moca']
-    skip_list = ['diagnostic_clinique']
+    iso_list = ['alpha_span', 'moca', 'ravlt']
+    skip_list = ['diagnostic_clinique', 'borb_line_orientation']
     npsych_tests = get_tests(npsych) # returns list of score tables
     for test in npsych_tests:
         # extract test name
@@ -144,10 +148,28 @@ def extract_npsych(ids, npsych, output):
 
     # add back subject id column as regular column
     neuro_scores.reset_index(level=None, drop=False, inplace=True)
-    return neuro_scores
 
-def run_pca(npsych):
-    return npsych
+    neuro_scores.insert(loc=neuro_scores.shape[1], column = 'memoria_total_correct', value = NaN,
+    allow_duplicates=True)
+    neuro_scores['memoria_total_correct'] = neuro_scores['memoria_free_correct'] + neuro_scores['memoria_indice_correct']
+    neuro_scores.drop(['memoria_indice_correct'], axis = 1, inplace=True)
+
+    # put columns in order, drop memoria_indice_correct column
+    col_order = ['dccid', 'hachinski_score', 'cdr_sb',
+    'mmse_total', 'moca_score', 'moca_score_schooling', 'gds_score',
+    'WAIS_digit_symbol_total', 'trailA_time', 'trailB_time', 'trailB_trailA_ratio',
+    'Stroop_cond3_time', 'Stroop_cond3_corr_errors', 'Stroop_cond3_nonCorr_errors',
+    'Stroop_cond4_time', 'Stroop_cond4_corr_errors', 'Stroop_cond4_nonCorr_errors',
+    'easy_object_decision_score', 'boston_correct_spontaneous', 'boston_total',
+    'WAIS_vocabulary', 'verb_flu_correct_responses', 'aspan_recall_correct_items',
+    'aspan_recall_percentage', 'env_prospective_memory', 'env_retrospective_memory',
+    'memoria_free_correct', 'memoria_total_correct', 'name_face_immediate_recall',
+    'name_face_delayed_recall', 'log_story_immediate_recall', 'log_story_delayed_recall',
+    'RAVLT_trial1', 'RAVLT_total', 'RAVLT_delRecall', 'RAVLT_recognition']
+
+    neuro_scores = neuro_scores[col_order]
+
+    return neuro_scores
 
 def main():
     args =  get_arguments()
@@ -157,7 +179,6 @@ def main():
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
     npsych_table = extract_npsych(ids, npsych_dir, output_dir)
-    pca_table = run_pca(npsych_table)
     npsych_table.to_csv(output_dir+'/ALL_Neuropsych_scores.tsv', sep = '\t', header=True, index = False)
 
 if __name__ == '__main__':

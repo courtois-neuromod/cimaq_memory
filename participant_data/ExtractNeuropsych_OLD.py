@@ -82,16 +82,16 @@ def get_cols(tname):
     """
     switcher = {
         'alpha_span': (['71233_rappel_alpha_item_reussis', '71233_rappel_alpha_pourcentage'], ['aspan_rappel_item_reussis', 'aspan_rappel_pourcentage']),
-        'boston_naming_test': (['57463_boston_score_correcte_spontanee', '57463_boston_score_total'],['boston_correct_spontaneous', 'boston_total']),
-        'easy_object_decision': (['45463_score'], ['easy_object_decision_score']),
+        'boston_naming_test': (['57463_boston_score_correcte_spontanee', '57463_boston_score_total'],['boston_correcte_spontanee', 'boston_total']),
+        'easy_object_decision': (['45463_score'], ['easy_object_score']),
         'echelle_depression_geriatrique': (['    d.70664_score'], ['gds_score']),
         'echelle_hachinski': (['86588_score'],['hachinski_score']),
         'evaluation_demence_clinique': (['34013_cdr_sb'], ['cdr_sb']),
         'fluence_verbale_animaux': (['    18057_score_reponse_correcte'], ['verb_flu_correct_responses']),
         'histoire_logique_wechsler_rappel_differe': (['40801_score_hist_rappel_differe'],['log_story_delayed_recall']),
         'memoria': (['18087_score_libre_correcte', '18087_score_indice_correcte'],['memoria_libre_correct', 'memoria_indice_correct']),
-        'moca': (['12783_score', '12783_score_scolarite'], ['moca_score', 'moca_score_schooling']),
-        'prenom_visage': (['33288_score_rappel_immediat', '33288_score_rappel_differe'], ['name_face_immediate_recall', 'name_face_delayed_recall']),
+        'moca': (['12783_score', '12783_score_scolarite'], ['moca_score', 'moca_score_scolarite']),
+        'prenom_visage': (['33288_score_rappel_immediat', '33288_score_rappel_differe'], ['prenom_visage_rappel_immediat', 'prenom_visage_rappel_differe']),
         'test_enveloppe': (['75344_score_memoire_prospective', '75344_score_memoire_retrospective'], ['env_memoire_prospective', 'env_memoire_retrospective']),
         'tmmse': (['80604_score_total'],['mmse_total']),
         'trail_making_test': (['44695_temps_trailA', '44695_temps_trailB', '44695_ratio_trailB_trailA'],['trailA_time', 'trailB_time', 'trailB_trailA_ratio'])
@@ -108,7 +108,7 @@ def extract_npsych(ids, npsych, output):
     neuro_scores.insert(loc = 0, column = 'dccid', value = ids, allow_duplicates=False)
     neuro_scores.set_index('dccid', inplace = True)
 
-    iso_list = ['alpha_span', 'moca']
+    iso_list = ['alpha_span', 'moca', 'ravlt']
     skip_list = ['diagnostic_clinique']
     npsych_tests = get_tests(npsych) # returns list of score tables
     for test in npsych_tests:
@@ -144,16 +144,6 @@ def extract_npsych(ids, npsych, output):
 
     # add back subject id column as regular column
     neuro_scores.reset_index(level=None, drop=False, inplace=True)
-    # put columns in order
-    neuro_scores = neuro_scores['dccid', 'hachinski_score', 'cdr_sb',
-    'mmse_total', 'moca_score', 'moca_score_schooling',   'gds_score',
-    'trailA_time', 'trailB_time', 'trailB_trailA_ratio','easy_object_score',
-    'boston_correct_spontaneous', 'boston_total', 'verb_flu_correct_responses',
-    'aspan_rappel_item_reussis', 'aspan_rappel_pourcentage',
-    'env_memoire_prospective', 'env_memoire_retrospective', 'memoria_libre_correct',
-    'memoria_indice_correct', 'name_face_immediate_recall',
-    'name_face_delayed_recall', 'log_story_delayed_recall']
-
     return neuro_scores
 
 def run_pca(npsych):
