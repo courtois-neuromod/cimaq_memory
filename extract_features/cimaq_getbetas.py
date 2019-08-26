@@ -96,11 +96,11 @@ def get_task_Files(slist, tDir):
     Parameter:
     ----------
     slist: a list of strings (dccids of subjects to include)
-    task_files: list of strings (paths to task files)
+    tDir: a string (path to directory with task files)
 
     Return:
     ----------
-    None (beta maps are saved directly in outdir)
+    task_files (a list of strings: paths to task files)
     """
     # TEST IF THIS PART WORKS: only run subjects if id is on list (argument)
     if not os.path.exists(tDir):
@@ -111,8 +111,8 @@ def get_task_Files(slist, tDir):
     task_files = []
     for tfile in all_files:
         id = os.path.basename(tfile).split('-')[1].split('_')[0]
-        print(id)
         if int(id) in subs:
+            print(id)
             task_files.append(tfile)
 
     return task_files
