@@ -1,1 +1,0 @@
-python cimaq_getbetas.py -s ../../data/participants/sublist_TaskQC.tsv -b ../../data/features/beta_maps -m ../../data/templates/MIST_parcellation/Release -c ../../data/confounds/resample -k ../../data/masks -f ../../data/fmri/resample -o ../../data/features/network_weights
