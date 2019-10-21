@@ -1,0 +1,38 @@
+var participants_headers = {
+  "participant_id": {
+    "Description": "6-digit Loris DDCID identifier"
+  },
+  "clinical_age_month": {
+    "Description": "age at the time of testing, in months"
+  },
+  "schooling": {
+    "Description":"years of schooling"
+  },
+  "sex": {
+    "Description":"male or female gender"
+  },
+  "group":{
+    "Description":"grouping based on clinical diagnosis at the time of assessment;
+    'CTL' = Cognitively Normal Control, 'SCD' = subjective cognitive disorder,
+    'MCI'= mild cognitive impairment"
+  },
+  "group_detail": {
+    "Description":"finer clinical diagnosis at the time of assessment;
+    'CTL' = Cognitively Normal Control, 'SCD' = subjective cognitive disorder,
+    'SCD+' = ???, 'lMCI'= l?? mild cognitive impairment,
+    'eMCI' = ? mild cognitive impairment"
+  },
+  "site": {
+    "Description": "site of data acquisition;
+    'IGM' = Institut universitaire en geriatrie de Montreal,
+    'CNQ' = Centre de recherche de l'Institut universitaire en sante mentale de Quebec,
+    'JGH' = Jewish General Hospital,
+    'CHS' = Centre hospitalier universitaire de Sherbrooke"
+  },
+  "pscid":{
+    "Description": "PSCID participant identifier"
+  },
+  "fMRI":{
+    "Description": "yes if valid fMRI data, otherwise no"
+  }
+}
