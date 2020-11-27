@@ -1,0 +1,69 @@
+{
+  "clinical_age_month": {
+    "Description": "age at the time of testing, in months"
+  },
+  "fMRI": {
+    "Description": "yes if valid fMRI data, otherwise no"
+  },
+  "group": {
+    "Description": "grouping based on clinical diagnosis at the time of assessment;\n    'CTL' = Cognitively Normal Control, 'SCD' = subjective cognitive disorder,\n    'MCI'= mild cognitive impairment"
+  },
+  "group_detail": {
+    "Description": "finer clinical diagnosis at the time of assessment;\n    'CTL' = Cognitively Normal Control, 'SCD' = subjective cognitive disorder,\n    'SCD+' = ???, 'lMCI'= l?? mild cognitive impairment,\n    'eMCI' = ? mild cognitive impairment"
+  },
+  "participant_id": {
+    "Description": "6-digit Loris DDCID identifier"
+  },
+  "pscid": {
+    "Description": "PSCID participant identifier"
+  },
+  "schooling": {
+    "Description": "years of schooling"
+  },
+  "sex": {
+    "Description": "male or female gender"
+  },
+  "site": {
+    "Description": "site of data acquisition;\n    'IGM' = Institut universitaire en geriatrie de Montreal,\n    'CNQ' = Centre de recherche de l'Institut universitaire en sante mentale de Quebec,\n    'JGH' = Jewish General Hospital,\n    'CHS' = Centre hospitalier universitaire de Sherbrooke"
+  }
+}
+
+
+var participants_headers = {
+  "participant_id": {
+    "Description": "6-digit Loris DDCID identifier"
+  },
+  "clinical_age_month": {
+    "Description": "age at the time of testing, in months"
+  },
+  "schooling": {
+    "Description":"years of schooling"
+  },
+  "sex": {
+    "Description":"male or female gender"
+  },
+  "group":{
+    "Description":"grouping based on clinical diagnosis at the time of assessment;
+    'CTL' = Cognitively Normal Control, 'SCD' = subjective cognitive disorder,
+    'MCI'= mild cognitive impairment"
+  },
+  "group_detail": {
+    "Description":"finer clinical diagnosis at the time of assessment;
+    'CTL' = Cognitively Normal Control, 'SCD' = subjective cognitive disorder,
+    'SCD+' = ???, 'lMCI'= l?? mild cognitive impairment,
+    'eMCI' = ? mild cognitive impairment"
+  },
+  "site": {
+    "Description": "site of data acquisition;
+    'IGM' = Institut universitaire en geriatrie de Montreal,
+    'CNQ' = Centre de recherche de l'Institut universitaire en sante mentale de Quebec,
+    'JGH' = Jewish General Hospital,
+    'CHS' = Centre hospitalier universitaire de Sherbrooke"
+  },
+  "pscid":{
+    "Description": "PSCID participant identifier"
+  },
+  "fMRI":{
+    "Description": "yes if valid fMRI data, otherwise no"
+  }
+}
