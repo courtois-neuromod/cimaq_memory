@@ -1,0 +1,1 @@
+python cimaq_getNetworkWeights.py -s ../../data/participants/sublist_1.tsv -b ../../data/features/beta_maps -m ../../data/templates/MIST_parcellation/Release -c ../../data/confounds/resample -k ../../data/masks -f ../../data/fmri/resample -o ../../data/features/network_weights
