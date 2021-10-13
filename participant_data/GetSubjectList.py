@@ -14,15 +14,9 @@ def get_arguments():
         """)
 
     parser.add_argument(
-        "-t", "--tdir",
+        "-d", "--idir",
         required=True, nargs="+",
-        help="Folder with task files",
-        )
-
-    parser.add_argument(
-        "-f", "--fdir",
-        required=True, nargs="+",
-        help="Folder with fmri files",
+        help="Folder with input files",
         )
 
     parser.add_argument(
@@ -44,39 +38,27 @@ def get_arguments():
     else:
         return args
 
-def get_ids(taskDir, fmriDir):
-    if not os.path.exists(taskDir):
-        sys.exit('The task folder doesnt exist: {}'.format(iDir))
+def get_ids(fileDir):
+    if not os.path.exists(fileDir):
+        sys.exit('This folder doesnt exist: {}'.format(iDir))
         return
-    if not os.path.exists(fmriDir):
-        sys.exit('The fMRI folder doesnt exist: {}'.format(iDir))
-        return
-    tFiles = glob.glob(os.path.join(taskDir,'sub*.tsv'))
-    tIDs = []
-    for tfile in tFiles:
-        tfilename = os.path.basename(tfile)
-        tid = tfilename.split('-')[1].split('_')[0]
-        tIDs.append(tid)
-
-    fFiles = glob.glob(os.path.join(fmriDir,'fmri*.nii'))
-    fIDs = []
-    for ffile in fFiles:
-        ffilename = os.path.basename(ffile)
-        fid = ffilename.split('_')[1].split('sub')[1]
-        fIDs.append(fid)
-
-    ids = list(set(tIDs) & set(fIDs))
+    files = glob.glob(os.path.join(fileDir,'sub*.tsv'))
+    ids = []
+    for file in files:
+        filename = os.path.basename(file)
+        id = filename.split('-')[1].split('_')[0]
+        ids.append(id)
     return ids
 
 def main():
     args = get_arguments()
     output_dir = args.odir[0]
-    ids = get_ids(args.tdir[0], args.fdir[0])
+    ids = get_ids(args.idir[0])
     data_ids = pd.DataFrame({'sub_ids' : ids})
     print(data_ids['sub_ids'])
     data_ids.sort_values(by = ['sub_ids'], axis = 0, ascending = True, inplace= True)
     print(data_ids.iloc[:, 0])
-    data_ids.to_csv(output_dir+'/sub_list_TaskQC.tsv', sep='\t',
+    data_ids.to_csv(output_dir+'/sub_list.tsv', sep='\t',
     header=True, index=False)
 
 if __name__ == '__main__':
