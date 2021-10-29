@@ -5,25 +5,20 @@ import csv
 from io import BytesIO, StringIO
 import os
 import pandas as pd
+import string
+import sys
 import zipfile
 from pathlib import Path
-import string
 import loadutils as lu
-from sniffbytes import get_delimiter
-from sniffbytes import get_bencod
-from sniffbytes import get_nfields
-from sniffbytes import get_bytes
-from get_delim import get_delim
-from unitxt import unitxt
-from unidecode import unidecode
-import string
+from get_bytes import get_bytes
+# from unitxt import unitxt
 from string import capwords
 from collections import Counter
-from pandas import DataFrame as df
 from collections.abc import Callable, Iterable, Sequence 
+from pandas import DataFrame as df
 from typing import Union
-import sys
 from typing import Union
+from unidecode import unidecode
 
 def get_most_common_enc(inpt: Union[bytes, bytearray, str,
                                     os.PathLike, object]
@@ -133,7 +128,6 @@ def get_znames(zfile:zipfile.ZipFile,
         znames = lu.filterlist_inc(include=to_include,
                                    lst=zfile.namelist())
     return znames
-
 
 def load_subtables(zdir:Union[str,os.PathLike],
                    exts:Union[str, Sequence]='.txt',
