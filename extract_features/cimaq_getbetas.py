@@ -96,11 +96,11 @@ def get_task_Files(slist, tDir):
     Parameter:
     ----------
     slist: a list of strings (dccids of subjects to include)
-    tDir: a string (path to directory with task files)
+    task_files: list of strings (paths to task files)
 
     Return:
     ----------
-    task_files (a list of strings: paths to task files)
+    None (beta maps are saved directly in outdir)
     """
     # TEST IF THIS PART WORKS: only run subjects if id is on list (argument)
     if not os.path.exists(tDir):
@@ -212,15 +212,15 @@ def extract_events(taskFile, id, outdir, scanDur):
         tData.loc[n, 'ctl_miss_hit']='control'
         tData.loc[n, 'ctl_miss_ws_cs']='control'
 
-    # save extended task file dataframe as .tsv file
+    #save extended task file dataframe as .tsv file
     tData.to_csv(outdir+'/sub-'+id+'_events.tsv',
     sep='\t', header=True, index=False)
 
-    # keep only trials for which fMRI data was collected
+    #keep only trials for which fMRI data was collected
     tData = tData[tData['unscanned']==0]
 
-    # Save vectors of trial labels (e.g., encoding vs control)
-    # to label trials for classification in later analyses
+    #Save vectors of trial labels (e.g., encoding vs control)
+    #to label trials for classification in later analyses
     vec1 = tData['condition']
     vec1.to_csv(outdir+'/sub-'+id+'_enco_ctl.tsv',
     sep='\t', header=True, index=False)
