@@ -85,8 +85,7 @@ def main():
     parser.add_argument('-p', '--print', dest='prnt', action='store_true',
                         help=help_messages[-1])
     args = parser.parse_args()
-    read_data(args.inpt[0], args.encoding, args.sep,
-              args.file_header, args.prnt)
+    read_data(args.inpt[0], args.encoding, args.sep, args.prnt)
 
 if __name__ == '__main__':
     main()
