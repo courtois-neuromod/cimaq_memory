@@ -23,7 +23,8 @@ def get_znames(zfile: Union[str, os.PathLike, ZipFile],
                nfiles: int = None,
                default_filtering: bool = True,
                keep_open: bool = False,
-               prnt: bool = False
+               prnt: bool = False,
+               **kwargs
               ) -> list:
     """
     Returns desired file names from zipfile archive.

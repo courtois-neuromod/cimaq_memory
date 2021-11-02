@@ -4,6 +4,7 @@ import argparse
 import chardet
 import os
 import sys
+import typing
 
 from argparse import ArgumentParser
 from argparse import ArgumentDefaultsHelpFormatter
@@ -68,7 +69,7 @@ def get_encoding(inpt: Union[bytes, bytearray, str,
     return result
 
 def main():
-    InptType = NewType('InptType', [bytes, bytearray, str,
+    InptType = NewType('InptType', [bytes, bytearray, str, typing.io,
                                     os.PathLike, object])
     parser = ArgumentParser(prog=get_encoding,
                             usage=get_encoding.__doc__,

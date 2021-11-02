@@ -11,6 +11,8 @@ from pathlib import Path
 from typing import NewType, Sequence, Union
 from unidecode import unidecode
 
+from fix_dupindex import fix_dupindex
+from get_has_dupindex import get_has_dupindex
 from get_znames import get_znames
 from read_data import read_data
 
@@ -105,7 +107,10 @@ def sort_events(zdir: Union[str, os.PathLike],
                     new_zname = unidecode(Path(os.path.basename(zname)).resolve().name)
                     fname = '_'.join([sub_id, f'ses-{v_num}',
                                       os.path.splitext(new_zname)[0]+'.tsv'])
-                    read_data(zf.read(zname)).to_csv(os.path.join(dst, sub_id, v_num, fname),
+                    table = [fix_dupindex(read_data(zf.read(zname)))
+                             if get_has_dupindex(read_data(zf.read(zname)))
+                             else read_data(zf.read(zname))][0]
+                    table.to_csv(os.path.join(dst, sub_id, v_num, fname),
                                                      sep='\t', encoding='UTF-8-SIG')
             else:
                 irreg.append((sub_id, v_num, zfile[1], len(znames), znames))

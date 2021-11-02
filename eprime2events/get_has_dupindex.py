@@ -3,6 +3,7 @@
 import os
 import pandas as pd
 import sys
+import typing
 from argparse import ArgumentParser
 from typing import NewType, Union
 from unidecode import unidecode
@@ -14,10 +15,11 @@ from get_has_header import get_has_header
 eveseq = lambda it: tuple(i[1] for i in enumerate(it) if i[0] % 2 == 0)
 oddseq = lambda it: tuple(i[1] for i in enumerate(it) if i[0] % 2 != 0)
 
-InptType = NewType('InptType', [bytes, bytearray, str, os.PathLike,
-                                pd.DataFrame, object])
 
-def get_has_dupindex(inpt: InptType, encoding: str = None,
+
+def get_has_dupindex(inpt: [bytes, bytearray, str, os.PathLike,
+                            pd.DataFrame, object],
+                     encoding: str = None,
                      prnt: bool = False) -> bool:
     """
     Returns True or False depending if inpt has a duplicate index
@@ -41,9 +43,9 @@ def get_has_dupindex(inpt: InptType, encoding: str = None,
 
     """
     if isinstance(inpt, pd.DataFrame):
-        enc = sys.getdefaultencoding
+        enc = sys.getdefaultencoding()
         inpt = unidecode('\n'.join(['\t'.join([str(i) for i in line])
-                         for line in inpt.values.tolist()]))
+                         for line in inpt.values.tolist()])).encode(enc)
     inpt = get_bytes(inpt)
     enc = [encoding if encoding is not None
            else get_encoding(inpt)][0]
@@ -52,23 +54,24 @@ def get_has_dupindex(inpt: InptType, encoding: str = None,
              if file_header else inpt.splitlines()][0]
     ev_items, od_items = eveseq(lines), oddseq(lines)
     try:
-        return ev_items[0].split()[0] == od_items[0].split()[0]
+#        return ev_items[0].split()[0] == od_items[0].split()[0]
+        eve_index = [line.split()[0] for line in ev_items]
+        odd_index = [line.split()[0] for line in od_items]
+        val = eve_index == odd_index
     except IndexError:
-        return False
+        val = False
+    if prnt is True:
+        print(val)
+    return val
 
-def get_desc(function_name):
-    from docstring_parser import parse as dsparse
-    parsed = dsparse(read_data.__doc__)
-    help_msgs = tuple(prm.description for prm
-                      in parsed.params)
-    desc = '\n'.join([parsed.short_description,
-                      parsed.long_description])
-    return desc, help_msgs
 
 def main():
+    from get_desc import get_desc
     desc, help_msgs = get_desc(get_has_dupindex.__doc__)
     parser_args = dict(usage=get_has_dupindex.__doc__,
                        description=desc)
+    InptType = NewType('InptType', [bytes, bytearray, str, os.PathLike,
+                                    pd.DataFrame, object])
     parser = ArgumentParser(prog=get_has_dupindex, **parser_args)
     parser.add_argument('inpt', nargs=1, type=InptType,
                         help=help_msgs[0])

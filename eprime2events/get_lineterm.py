@@ -3,6 +3,7 @@
 import os
 import pandas as pd
 import sys
+import typing
 from argparse import ArgumentParser
 from argparse import ArgumentDefaultsHelpFormatter
 from collections import Counter
@@ -12,7 +13,7 @@ from typing import NewType, Union
 from get_encoding import get_encoding
 from get_bytes import get_bytes
 
-InptType = NewType('InptType', [bytes, bytearray, str,
+InptType = NewType('InptType', [bytes, bytearray, str, typing.io,
                                 os.PathLike, object])
 
 def get_lineterm(inpt: InptType,

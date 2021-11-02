@@ -3,6 +3,7 @@
 import os
 import pandas as pd
 import re
+import typing
 from argparse import ArgumentParser
 from argparse import ArgumentDefaultsHelpFormatter
 from pandas import DataFrame as df
@@ -11,7 +12,7 @@ from typing import NewType, Union
 from get_bytes import get_bytes
 from get_encoding import get_encoding
 
-def get_separator(inpt:Union[bytes, bytearray, str,
+def get_separator(inpt:Union[bytes, bytearray, str, typing.io,
                              os.PathLike, object],
                   encoding:str=None,
                   prnt:bool=False):
