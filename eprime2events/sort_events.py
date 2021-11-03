@@ -6,6 +6,7 @@ import tempfile
 import zipfile
 
 from argparse import ArgumentParser
+from os.path import splitext
 from pandas import DataFrame as df
 from pathlib import Path
 from typing import NewType, Sequence, Union
@@ -106,8 +107,8 @@ def sort_events(zdir: Union[str, os.PathLike],
                 for zname in znames:
                     new_zname = unidecode(Path(os.path.basename(zname)).resolve().name)
                     fname = '_'.join([sub_id, f'ses-{v_num}',
-                                      os.path.splitext(new_zname)[0]+'.tsv'])
-                    table = [fix_dupindex(read_data(zf.read(zname)))
+                                      splitext(new_zname)[0].replace('.', '_')+'.tsv'])
+                    table = [fix_dupindex(read_data(zf.read(zname).lower()))
                              if get_has_dupindex(read_data(zf.read(zname)))
                              else read_data(zf.read(zname))][0]
                     table.to_csv(os.path.join(dst, sub_id, v_num, fname),
