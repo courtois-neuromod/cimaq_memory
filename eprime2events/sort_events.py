@@ -110,7 +110,7 @@ def sort_events(zdir: Union[str, os.PathLike],
                                       splitext(new_zname)[0].replace('.', '_')+'.tsv'])
                     table = [fix_dupindex(read_data(zf.read(zname).lower()))
                              if get_has_dupindex(read_data(zf.read(zname)))
-                             else read_data(zf.read(zname))][0]
+                             else read_data(zf.read(zname).lower())][0]
                     table.to_csv(os.path.join(dst, sub_id, v_num, fname),
                                                      sep='\t', encoding='UTF-8-SIG')
             else:
