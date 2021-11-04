@@ -111,7 +111,7 @@ def sort_events(zdir: Union[str, os.PathLike],
                     table = [fix_dupindex(read_data(zf.read(zname).lower()))
                              if get_has_dupindex(read_data(zf.read(zname)))
                              else read_data(zf.read(zname).lower())][0]
-                    table.to_csv(os.path.join(dst, sub_id, v_num, fname), index=None,
+                    table.astype(str).to_csv(os.path.join(dst, sub_id, v_num, fname), index=None,
                                                      sep='\t', encoding='UTF-8-SIG')
             else:
                 irreg.append((sub_id, v_num, zfile[1], len(znames), znames))
