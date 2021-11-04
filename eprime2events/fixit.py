@@ -84,7 +84,7 @@ def fixit(src:Union[str, os.PathLike],
     testpaths = tuple(set(os.path.dirname(fpath) for fpath in load_recursive(src)
                           if os.path.basename(os.path.dirname(fpath)).startswith('V')))
     ustims = make_cimaq_stim_map(src)
-    print(ustims)
+#     print(ustims)
     dst = [dst if dst is not None else
            os.path.join(tempfile.gettempdir(),
                         os.path.basename(src)+'_fixed')][0]
@@ -100,7 +100,7 @@ def fixit(src:Union[str, os.PathLike],
         enc_suf, ret_suf = 'events.tsv', 'behavioural.tsv'
         onsets, enc, ret = [pd.read_csv(itm, sep='\t', dtype=str, engine='python')
                                     for itm in sorted(item)]
-        print((onsets, enc, ret))
+#         print((onsets, enc, ret))
         # Remove redundant columns
 #         try:
         onsets = onsets.drop(['0','1','2','4','6','7'], axis=1)
