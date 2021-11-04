@@ -95,10 +95,13 @@ def fixit(src:Union[str, os.PathLike],
                                                 dtype=str)
                                     for itm in sorted(item)]
         # Remove redundant columns
-#         try:
-        onsets = onsets.drop(['0','1','2','4','6','7'], axis=1)
-        onsets = onsets.set_axis(['oldnumber','onset',
-                                  'offset','isi'], axis=1)
+        try:
+            onsets = onsets.drop(['0','1','2','4','6','7'], axis=1)
+            onsets = onsets.set_axis(['oldnumber','onset',
+                                      'offset','isi'], axis=1)
+        except KeyError:
+          print(os.path.dirname(item[0]))
+          pass
         
 #           pass
         # Note 0: Button-press
