@@ -99,28 +99,29 @@ def fixit(src:Union[str, os.PathLike],
             onsets = onsets.drop(['0','1','2','4','6','7'], axis=1)
             onsets = onsets.set_axis(['oldnumber','onset',
                                       'offset','isi'], axis=1)
+        
+#           pass
+        # Note 0: Button-press
+            if 'stim_resp' in tuple(enc.columns):
+                enc = enc.drop(['stim_resp'], axis=1)
+
+            enc = enc.drop(['stim_acc'], axis=1)
+            enc['stim'] = enc.oldnumber.map(dict(zip(ret.oldnumber,
+                                                     ret.stim)))
+            enc['stim_id'] = enc.stim.map(dict(zip(ustims.stim,
+                                                   ustims.index)))
+            enc['categ_id'] = enc.stim_id.map(dict(zip(ustims.index,
+                                                       ustims.categ_id)))
+            ret['position'] = ret.oldnumber.map(dict(zip(enc.oldnumber,
+                                                         enc.correctsource)))
+            ret['stim_id'] = ret.stim.map(dict(zip(ustims.stim,
+                                                   ustims.index)))
+            ret['categ_id'] = ret.stim.map(dict(zip(ustims.stim,
+                                                    ustims.categ_id)))
+
+            enc[ons_cols] = onsets[ons_cols]
         except KeyError:
           print(os.path.dirname(item[0]))
-          pass
-        # Note 0: Button-press
-        if 'stim_resp' in tuple(enc.columns):
-            enc = enc.drop(['stim_resp'], axis=1)
-
-        enc = enc.drop(['stim_acc'], axis=1)
-        enc['stim'] = enc.oldnumber.map(dict(zip(ret.oldnumber,
-                                                 ret.stim)))
-        enc['stim_id'] = enc.stim.map(dict(zip(ustims.stim,
-                                               ustims.index)))
-        enc['categ_id'] = enc.stim_id.map(dict(zip(ustims.index,
-                                                   ustims.categ_id)))
-        ret['position'] = ret.oldnumber.map(dict(zip(enc.oldnumber,
-                                                     enc.correctsource)))
-        ret['stim_id'] = ret.stim.map(dict(zip(ustims.stim,
-                                               ustims.index)))
-        ret['categ_id'] = ret.stim.map(dict(zip(ustims.stim,
-                                                ustims.categ_id)))
-
-        enc[ons_cols] = onsets[ons_cols]
         enc = enc.drop(['trialcode', 'oldnumber', 'stim'],
                                axis=1).fillna('NA')
         enc['category'] = enc['category'].replace({'ctl':'0',
