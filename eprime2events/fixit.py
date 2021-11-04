@@ -93,6 +93,7 @@ def fixit(src:Union[str, os.PathLike],
     for item in testpaths:
 #         item = sorted(list(item))
         item = tuple(os.path.join(item, itm) for itm in sorted(os.listdir(item)))
+        print(item)
         sub_id = os.path.basename(os.path.dirname(os.path.dirname(item[0])))
         v_num = os.path.basename(os.path.dirname(item[0]))
         mid = 'task-memory'
