@@ -80,7 +80,8 @@ def fixit(src:Union[str, os.PathLike],
             (image considered OLD) before eprime moves to the next trial.
     """
 
-    testpaths=load_cimaq_taskfiles(src)
+#     testpaths=load_cimaq_taskfiles(src)
+    testpaths = tuple(set(oa.path.dirname(fpath) for fpath in load_recursive(src)))
     ustims = make_cimaq_stim_map(src)
     dst = [dst if dst is not None else
            os.path.join(tempfile.gettempdir(),
@@ -88,7 +89,8 @@ def fixit(src:Union[str, os.PathLike],
     os.makedirs(dst, exist_ok=True)
 
     for item in testpaths:
-        item = sorted(list(item))
+#         item = sorted(list(item))
+        item = tuple(os.path.join(item, itm) for item in sorted(os.listdir(item)))
         sub_id = os.path.basename(os.path.dirname(os.path.dirname(item[0])))
         v_num = os.path.basename(os.path.dirname(item[0]))
         mid = 'task-memory'
