@@ -122,6 +122,7 @@ def fixit(src:Union[str, os.PathLike],
             enc[ons_cols] = onsets[ons_cols]
         except KeyError:
           print(os.path.dirname(item[0]))
+          pass
         enc = enc.drop(['trialcode', 'oldnumber', 'stim'],
                                axis=1).fillna('NA')
         enc['category'] = enc['category'].replace({'ctl':'0',
