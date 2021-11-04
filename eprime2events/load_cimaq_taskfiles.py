@@ -27,7 +27,7 @@ def load_cimaq_taskfiles(src: Union[str, os.PathLike]) -> tuple:
         A tuple of 3-items tuples (3 files per visit for each visit)
     """
 
-    onsets = sorted(exclude(['Retrieval', 'Output'],
+    onsets = sorted(include(['Onset'],
                             [itm for itm in load_recursive(src)
                              if itm.endswith('.tsv')]))
 
