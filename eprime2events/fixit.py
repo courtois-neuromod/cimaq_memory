@@ -99,13 +99,13 @@ def fixit(src:Union[str, os.PathLike],
         onsets, enc, ret = [pd.read_csv(itm, sep='\t', dtype=str, engine='python')
                                     for itm in sorted(item)]
         # Remove redundant columns
-        try:
-            onsets = onsets.drop(['0','1','2','4','6','7'], axis=1)
-            onsets = onsets.set_axis(['oldnumber','onset',
+#         try:
+        onsets = onsets.drop(['0','1','2','4','6','7'], axis=1)
+        onsets = onsets.set_axis(['oldnumber','onset',
                                       'offset','isi'], axis=1)
-        except KeyError:
-          print(os.path.dirname(item[0]))
-          continue
+#         except KeyError:
+#           print(os.path.dirname(item[0]))
+#           continue
 #           pass
         # Note 0: Button-press
         if 'stim_resp' in tuple(enc.columns):
