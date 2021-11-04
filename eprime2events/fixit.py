@@ -81,7 +81,8 @@ def fixit(src:Union[str, os.PathLike],
     """
 
 #     testpaths=load_cimaq_taskfiles(src)
-    testpaths = tuple(set(os.path.dirname(fpath) for fpath in load_recursive(src)))
+    testpaths = tuple(set(os.path.dirname(fpath) for fpath in load_recursive(src)
+                          if os.path.basename(fpath).startswith('V')))
     ustims = make_cimaq_stim_map(src)
     dst = [dst if dst is not None else
            os.path.join(tempfile.gettempdir(),
