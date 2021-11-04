@@ -95,8 +95,7 @@ def fixit(src:Union[str, os.PathLike],
         v_num = os.path.basename(os.path.dirname(item[0]))
         mid = 'task-memory'
         enc_suf, ret_suf = 'events.tsv', 'behavioural.tsv'
-        onsets, enc, ret = [pd.read_csv(itm, sep='\t',
-                                                dtype=str)
+        onsets, enc, ret = [pd.read_csv(itm, sep='\t', dtype=str, engine='python')
                                     for itm in sorted(item)]
         # Remove redundant columns
         try:
