@@ -22,7 +22,7 @@ intersect = lambda lst1, lst2: [v for v in tuple(set(lst1)) if v in set(lst2)]
 encoding_cols = ['trial_num','trial_type','position',
                  'stim_rt','stim_id', 'categ_id','onset',
                  'duration','offset','isi']
-retrieval_cols = ['trial_type','recog_resp','recog_rt',
+retrieval_cols = ['trial_type','recog_rt','recog_resp',
                   'position_resp', 'position_rt', 'position',
                   'stim_id','categ_id']
 onset_cols = ['oldnumber','onset', 'offset','isi']
