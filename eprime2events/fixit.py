@@ -80,13 +80,18 @@ def fixit(src:Union[str, os.PathLike],
             (image considered OLD) before eprime moves to the next trial.
     """
 
-    testpaths=load_cimaq_taskfiles(src)
+    testpaths=len(load_cimaq_taskfiles(src))
     ustims = make_cimaq_stim_map(src)
     dst = [dst if dst is not None else
            os.path.join(tempfile.gettempdir(),
                         os.path.basename(src)+'_fixed')][0]
     os.makedirs(dst, exist_ok=True)
-    for item in testpaths:
+    def gencimaq(src):
+        fgen = iter(load_cimaq_taskfiles(src))
+        yield next(fgen)
+    fgen = gencimaq(src=src)
+    for i in range(testpaths):
+        item = next(fgen)
         sub_id = os.path.basename(os.path.dirname(os.path.dirname(item[0])))
         v_num = os.path.basename(os.path.dirname(item[0]))
         mid = 'task-memory'
@@ -101,7 +106,7 @@ def fixit(src:Union[str, os.PathLike],
                                       'offset','isi'], axis=1)
         except KeyError:
           print(os.path.dirname(item[0]))
-          pass
+          next(fgen)
         
 #           pass
         # Note 0: Button-press
