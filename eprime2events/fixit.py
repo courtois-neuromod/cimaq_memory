@@ -19,11 +19,11 @@ revdict = lambda d: dict(tuple((i[1], i[0]) for i in tuple(d.items())))
 get_uids = lambda lst, s=0: dict(tuple(enumerate(sorted(list(lst)), s)))
 intersect = lambda lst1, lst2: [v for v in tuple(set(lst1)) if v in set(lst2)]
 
-encoding_cols = ['trial_num','trial_type','position',
+encoding_cols = ['trial_num','trial_type','pos',
                  'stim_rt','stim_id', 'categ_id','onset',
                  'duration','offset','isi']
 retrieval_cols = ['trial_type','recog_rt','recog_resp',
-                  'position_resp', 'position_rt', 'position',
+                  'pos_resp', 'pos_rt', 'pos',
                   'stim_id','categ_id']
 onset_cols = ['oldnumber','onset', 'offset','isi']
 
@@ -73,10 +73,10 @@ def fixit(src:Union[str, os.PathLike],
             consistantly.
         Note 1: Clean up eprime programming mistake
             Replace spatial_resp and spatial_rt values with NaN if subject
-            perceived image as 'new' (the image was not probed for position).
+            perceived image as 'new' (the image was not probed for pos).
             There should be no response or RT value there.
             Values were carried over from previous trial (not reset in eprime)
-            CONFIRMED w Isabel: subject must give a position answer when probed
+            CONFIRMED w Isabel: subject must give a pos answer when probed
             (image considered OLD) before eprime moves to the next trial.
     """
 
@@ -118,7 +118,7 @@ def fixit(src:Union[str, os.PathLike],
                                                ustims.index)))
         enc['categ_id'] = enc.stim_id.map(dict(zip(ustims.index,
                                                    ustims.categ_id)))
-        ret['position'] = ret.oldnumber.map(dict(zip(enc.oldnumber,
+        ret['pos'] = ret.oldnumber.map(dict(zip(enc.oldnumber,
                                                      enc.correctsource)))
         ret['stim_id'] = ret.stim.map(dict(zip(ustims.stim,
                                                ustims.index)))
@@ -158,12 +158,12 @@ def fixit(src:Union[str, os.PathLike],
         # Set the new Retrieval column names
         ret = ret.set_axis(ret_cols, axis=1)
         ret['recog_acc'] = ret['recog_resp']==ret['trial_type']
-        ret['position_acc'] = ret['position_resp']==ret['position']
+        ret['pos_acc'] = ret['pos_resp']==ret['pos']
         # Convert str to float and ms to s
         ret = ret.replace({'NA':np.nan})
         ret = ret.astype(float)
         ret['recog_rt'] = ret['recog_rt'].div(1000)
-        ret['position_rt'] = ret['position_rt'].div(1000)
+        ret['pos_rt'] = ret['pos_rt'].div(1000)
         ret = ret.reset_index(drop=False).rename({'index':'trial_num'},
                                                          axis=1)
         ret = ret.set_index('trial_num', drop=True)
