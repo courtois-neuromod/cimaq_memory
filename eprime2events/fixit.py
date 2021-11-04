@@ -100,7 +100,7 @@ def fixit(src:Union[str, os.PathLike],
             onsets = onsets.set_axis(['oldnumber','onset',
                                       'offset','isi'], axis=1)
         except KeyError:
-          print(os.path.dirname(itm[0]))
+          print(os.path.dirname(item[0]))
           pass
         # Note 0: Button-press
         if 'stim_resp' in tuple(enc.columns):
