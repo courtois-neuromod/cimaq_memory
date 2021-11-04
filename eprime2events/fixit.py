@@ -86,12 +86,8 @@ def fixit(src:Union[str, os.PathLike],
            os.path.join(tempfile.gettempdir(),
                         os.path.basename(src)+'_fixed')][0]
     os.makedirs(dst, exist_ok=True)
-#     def gencimaq(src):
-#         fgen = iter(load_cimaq_taskfiles(src))
-#         yield next(fgen)
-#     fgen = gencimaq(src=src)
+
     for item in testpaths:
-#         item = next(fgen)
         sub_id = os.path.basename(os.path.dirname(os.path.dirname(item[0])))
         v_num = os.path.basename(os.path.dirname(item[0]))
         mid = 'task-memory'
@@ -106,8 +102,7 @@ def fixit(src:Union[str, os.PathLike],
                                       'offset','isi'], axis=1)
         except KeyError:
           print(os.path.dirname(item[0]))
-          next(fgen)
-        
+          continue
 #           pass
         # Note 0: Button-press
         if 'stim_resp' in tuple(enc.columns):
