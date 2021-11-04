@@ -171,6 +171,7 @@ def fixit(src:Union[str, os.PathLike],
         os.makedirs(os.path.join(dst, sub_id), exist_ok=True)
         os.makedirs(os.path.join(dst, sub_id, v_num),
                                  exist_ok=True)
+        print((enc, ret))
         enc.to_csv(os.path.join(savepath, '_'.join([sub_id, 'ses-'+v_num,
                                                     mid, enc_suf])),
                    sep='\t', encoding='UTF-8-SIG')
