@@ -98,6 +98,7 @@ def fixit(src:Union[str, os.PathLike],
         enc_suf, ret_suf = 'events.tsv', 'behavioural.tsv'
         onsets, enc, ret = [pd.read_csv(itm, sep='\t', dtype=str, engine='python')
                                     for itm in sorted(item)]
+        print((onsets, enc, ret))
         # Remove redundant columns
 #         try:
         onsets = onsets.drop(['0','1','2','4','6','7'], axis=1)
