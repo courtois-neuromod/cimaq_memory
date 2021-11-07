@@ -7,6 +7,8 @@ import typing
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 from io import BytesIO
 from typing import NewType, Union
+from unidecode import unidecode
+
 from get_desc import get_desc
 from get_encoding import get_encoding
 from get_bytes import get_bytes
