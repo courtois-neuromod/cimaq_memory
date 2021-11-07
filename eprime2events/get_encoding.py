@@ -34,9 +34,12 @@ def get_inc_enc(inpt: Union[bytes, bytearray, str,
 
     inpt = get_bytes(inpt)
     detector = chardet.UniversalDetector()
+    checkups = (vars(detector)['done'] == True,
+                detector.result is not None)
     for line in inpt.splitlines():
         detector.feed(line)
-        if vars(detector)['done'] == True:
+        if all(checkups):
+#         if vars(detector)['done'] == True:
             break
         detector.close()
         rezz = detector.result
