@@ -1,19 +1,18 @@
 #!/usr/bin/python3
 
 import os
+import sys
 from argparse import ArgumentParser
-from argparse import ArgumentDefaultsHelpFormatter
-from collections import Counter
 from collections.abc import Sequence
-from docstring_parser import parse as dsparse
-from typing import NewType, Union
+from typing import Union
 from zipfile import ZipFile
 
-exclude = lambda exc, l: [i for i in l if all(s not in i for s in exc)]
-include = lambda inc, l: [i for i in l if any(s in i for s in inc)]
-s2sq = lambda s: [[s] if isinstance(s, str) else list(s)][0]
+from get_default_args import get_default_args
+from get_desc import get_desc
+from get_znames import get_znames
 
-def get_znames(zfile: Union[str, os.PathLike, ZipFile],
+def get_zinfos(src:Union[str,os.PathLike, ZipFile],
+               znames:Union[tuple, list, set]=None,
                exts:Union[str, Sequence]=None,
                to_include:Union[str, Sequence]=None,
                to_exclude:Union[str, Sequence]=None,
@@ -22,27 +21,20 @@ def get_znames(zfile: Union[str, os.PathLike, ZipFile],
                def_filt: bool = True,
                keep_open: bool = False,
                prnt: bool = False,
-               **kwargs
-              ) -> list:
+               **kwargs) -> list:
     """
-    Return desired file names from zipfile archive.
+    Return desired ZipInfo objects contained in src.
 
-    Lists the contents of a .zip archive. User can filter what
-    names are returned by specifying desired file extensions,
-    what names to include or exclude, a minimum file size, and what
-    number of file names is expected to be returned.
-    Default minimum size is 103 bits, which corresponds to a file containing a
-    single maximum possible lenght UTF-8 encoded character.
-    Due to cross-platform differences, some files thats are not actual members
-    of the archive might have been generated and added to its contents
-    during compression. These behave as if they were regular archives,
-    but are error prone, sometimes unreadable or empty.
-    The default behavior is to exclude such files.
+    Works similarly as ``get_znames``, but returns a zip archive member's
+    ZipInfo objects instead of its name.
 
     Args:
-        zfile: str, os.PathLike, ZipFile
-            Path of the zip archive. Can be a regular string,
-            a path-like object or an in-memory ZipFile object.
+        src: str, os.PathLike
+            Path of a zip archive
+        znames: list, tuple or set, optional
+            User-defined list of members contained in the zip archive.
+            If not provided, znames will be obtained using ``get_znames``.
+            Raises ``KeyError`` if a name is not contained in the archive.
         exts: str, set of str, Sequence of str or None, optional
             File extensions to look for within the archive. Can be a single
             string, a set or a Sequence. Single strings are inserted in a
@@ -78,50 +70,33 @@ def get_znames(zfile: Union[str, os.PathLike, ZipFile],
             Valid keywords are the names of the parameters listed above.
 
     Returns: list
-        List of ``ZipInfo`` object's names which are members
-        contained within the zip archive.
+        List of ``ZipInfo`` objects which are members contained
+        within the zip archive.
     """
-    badnames = ['.DS_Store', '_MACOSX', 'textClipping']
-    bydate = lambda dc: list(dc.keys())[list(dc.values()).index(nfiles)]
-    zfile = [zfile if isinstance(zfile, ZipFile)
-             else ZipFile(zfile, 'r')][0]
-    znames=zfile.namelist()
-    if exts is not None:
-        znames = include(exts, znames)
-    if to_include is not None:
-        znames = include(to_include, znames)
-    if to_exclude is not None:
-        znames = exclude(to_exclude, znames)
-    if def_filt is True:
-        znames = exclude(badnames, znames)
-    if min_size is not None:
-        znames = [name for name in znames if
-                  zfile.getinfo(name).file_size > min_size]
-# # for archives with more than nfiles files
-    if nfiles is not None:
-        if len(znames) > nfiles:
-            zinfos = [zfile.getinfo(name) for name in znames]
-            dates = [zinfo.date_time[:3] for zinfo in zinfos]
-            date_count = dict(Counter(dates))
-            try:
-                common_date = bydate(date_count)
-                znames = [itm[0] for itm in
-                          tuple(zip(znames, zinfos, dates))
-                          if itm[2] == common_date]
-            except ValueError:
-                znames = znames
+
+    from get_znames import get_znames
+    zfile = [src if isinstance(src, ZipFile)
+             else ZipFile(src, 'r')][0]
+    znames = [list(znames) if znames is not None else
+              get_znames(zfile, exts=exts, to_include=to_include,
+                         to_exclude=to_exclude, min_size=min_size,
+                         nfiles=nfiles, def_filt=def_filt,
+                         keep_open=True)][0]
+    zinfos = [zfile.getinfo(zname) for zname in znames]
     if keep_open is False:
         zfile.close()
     if prnt is True:
-        print(znames)
-    return znames
+        print(zinfos)
+    return zinfos
 
 def main():
-    parser = ArgumentParser(prog=get_znames,
-                            usage=get_znames.__doc__,
-                            description=get_znames.__doc__.splitlines()[0],
-                            formatter_class=ArgumentDefaultsHelpFormatter)
-    parser.add_argument('zfile', nargs=1)
+    desc, help_msgs = get_desc(get_zinfos)
+    parser = ArgumentParser(prog=get_zinfos,
+                            usage=get_zinfos.__doc__,
+                            description=desc)
+    parser.add_argument('src', nargs=1, help=help_msgs[0])
+    parser.add_argument('-z', '--znames', dest='znames', nargs='*',
+                        help=help_msgs[1])
     parser.add_argument('--exts', dest='exts', nargs='*')
     parser.add_argument('-i', '--include', dest='to_include', nargs='*')
     parser.add_argument('-e', '--exclude', dest='to_exclude', nargs='*')
@@ -133,8 +108,8 @@ def main():
     parser.add_argument('-p', '--print', dest='prnt', action='store_true',
                         help='print output to stdout')
     args = parser.parse_args()
-    get_znames(args.zfile[0], args.exts, args.to_include, args.to_exclude,
-               args.nfiles, args.min_size, args.def_filt,
+    get_zinfos(args.src[0], args.znames, args.exts, args.to_include,
+               args.to_exclude, args.nfiles, args.min_size, args.def_filt,
                args.keep_open, args.prnt)
 
 if __name__ == '__main__':
