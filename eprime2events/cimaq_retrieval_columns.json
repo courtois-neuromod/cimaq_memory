@@ -1,0 +1,13 @@
+{"category": "trial_type",
+ "Stim": "stim_file",
+ "StimCategory": "stim_category",
+ "OldNumber": "stim_id",
+ "Recognition_RESP": "recognition_response",
+ "Recognition_RT": "recognition_responsetime",
+ "Spatial_RESP": "position_response",
+ "Spatial_RT": "position_responsetime",
+ "CorrectSource": "position_correct",
+ "Recognition_ACC": "recognition_accuracy",
+ "Spatial_ACC": "position_accuracy",
+ "RecognitionPerformance": "recognition_performance"}
+ 
