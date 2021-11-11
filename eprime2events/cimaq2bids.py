@@ -219,7 +219,7 @@ def cimaq2bids(src:Union[str, os.PathLike],
                     value=[re.sub('\d*', '', item)
                            for item in ret.stim_id])
         os.makedirs(os.path.join(dst, sub_id, ses_id), exist_ok=True)
-        prefix = f'sub-{sub_id}_ses-{ses_id}_task-memory'
+        prefix = f'{sub_id}_{ses_id}_task-memory'
         out.to_csv(os.path.join(dst, sub_id, ses_id,
                                  prefix+'_events.tsv'),
                     sep='\t', index=None, encoding='UTF-8-SIG')
