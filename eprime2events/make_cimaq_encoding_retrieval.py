@@ -151,7 +151,7 @@ def make_cimaq_encoding_retrieval(src:Union[str,os.PathLike],
         for col in retf.iloc[:, 3:]:
             encf[col] = encf.oldnumber.map(dict(zip(retf.oldnumber,
                                                         retf[col])))
-        encf = encf.drop('position_correct', axis=1)
+#        encf = encf.drop('position_correct', axis=1)
         encf = encf.replace({'NA', np.nan})
         encf = encf.iloc[int(encf.shape[0]-retf.shape[0]):,:]
         encf = encf.reset_index(drop=True)

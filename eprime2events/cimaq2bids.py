@@ -41,11 +41,12 @@ def read_json(src:Union[str, os.PathLike])->dict:
     return jobj
 
 def get_recog_performance(retile:pd.DataFrame)->list:
-    score = ['Hit' if row[1]['Spatial_ACC'] == 1.0 else
+    score = ['Hit' if bool(row[1].Spatial_ACC == 1.0 and \
+             row[1].Recognition_ACC == 1.0) else
              'CR' if bool('New' in row[1].OldNumber and
-                          row[1].Recognition_RESP == 2) else
-             'FA' if bool('Old' in row[1].OldNumber and
-                          row[1]['Recognition_RESP'] == 2)
+                          row[1].Recognition_RESP == 2.0) else
+             'FA' if bool('New' in row[1].OldNumber and
+                          row[1]['Recognition_RESP'] == 1.0)
              else 'Miss' for row in retile.iterrows()]
     return score
 
@@ -176,12 +177,29 @@ def cimaq2bids(src:Union[str, os.PathLike],
         out['Category'] = out['Category'].str.title()
         out['Stim_RT'] = out['Stim_RT'].div(1000)
         out = pd.concat([out, ons], axis=1)
-        out = out.iloc[int(out.shape[0]-ret.shape[0]):, :]
+        out = out.iloc[3:, :]
+#        if out.shape[0] != ret.shape[0]:
+#        out, ret = out.reset_index(drop=True), ret.reset_index(drop=True)
+#        out = out.iloc[:,:]
+#        if out.shape[0] != ret.shape[0]:
+#            out = out.iloc[:ret.index[-1],:]
+#        longest = [df for df in [out,ret] if df.shape[0] ==
+#                    max((out.shape[0],ret.shape[0]))][0]
+#            shortest = [df.index for df in [out,ret] if df.shape[0] ==
+#                        min((out.shape[0],ret.shape[0]))][0]
+#            out, ret = out.iloc[shortest,:], ret.iloc[shortest,:]
+#        longest = longest.iloc[shortest.index, :]
+#        shortest = shortest.iloc[shortest.index, :]
+#        if out.shape[0] != ret.shape[0]:
+#            out = out.iloc[ret.index]
+#        out = out.iloc[int(out.shape[0]-ret.shape[0]):, :]
         ret = ret[['Stim', 'OldNumber', 'Recognition_RESP',
                      'Recognition_RT', 'Spatial_RESP', 'Spatial_RT']]
+
         # Fix Recognition_RESP alternative values
         if tuple(ret.Recognition_RESP.unique()) in ((0,9), (9,0)):
             ret['Recognition_RESP'] = ret['Recognition_RESP'].replace({9:1,0:2})
+
         # Note 0: Eprime Mistake
         ret[['Recognition_RT','Spatial_RT']] = [(row[1]['Recognition_RT']/1000,
                                                  row[1]['Spatial_RT']/1000) if
@@ -195,6 +213,13 @@ def cimaq2bids(src:Union[str, os.PathLike],
                                         or row[1].Recognition_RESP == 1
                                         and 'Old' in row[1].OldNumber))
                                    for row in ret.iterrows()]
+        ret[['Spatial_RESP','Spatial_RT']] = \
+            ret[['Spatial_RESP', 'Spatial_RT']].where(ret.Recognition_RESP!=2)
+
+       # Experimental setup (``Spatial_RESP`` keys) were changed since V03
+        alt_resp_keys = {1.0: 8.0, 2.0: 9.0, 3.0: 5.0, 4.0: 6.0}
+        if 4 in ret.Spatial_RESP:
+            ret.Spatial_RESP = ret.Spatial_RESP.replace(alt_resp_keys)
         ret['Spatial_ACC'] = [float(bool(row[1]['Spatial_RESP'] ==
                                         row[1]['CorrectSource']))
                                if row[1].Recognition_RESP == 1 else np.nan
@@ -215,6 +240,7 @@ def cimaq2bids(src:Union[str, os.PathLike],
             out = out.rename(read_json(enc_coldict), axis=1)
         if ret_coldict is not None:
             ret = ret.rename(read_json(ret_coldict), axis=1)
+        out['position_correct'] = out['position_correct'].astype(float)
         ret.insert(loc=0, column='old_new',
                     value=[re.sub('\d*', '', item)
                            for item in ret.stim_id])
