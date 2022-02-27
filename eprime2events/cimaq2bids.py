@@ -259,7 +259,7 @@ def cimaq2bids(src:Union[str, os.PathLike],
 def main():
     desc, helps = get_desc(cimaq2bids)
     parser = ArgumentParser(prog=cimaq2bids, usage=cimaq2bids.__doc__,
-                          description=desc)
+                            description=desc)
     parser.add_argument('src', nargs=1, help=helps[0])
     parser.add_argument('matchdict', nargs=1, help=helps[1])
     parser.add_argument('--enc-cols', dest='enc_coldict', nargs='?',

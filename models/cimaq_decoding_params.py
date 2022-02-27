@@ -6,22 +6,27 @@ from sklearn.utils import Bunch
 
 apply_defs = Bunch(smoothing_fwhm=8,
                    dtype='f',
+                   ensure_finite=False)
+
+
+atlas_defs = Bunch(atlas_name='difumo',
+                   dimension=128,
+                   resolution_mm=3)
+
+
+# To set manually: t_r,
+clean_defs = Bunch(standardize=False,
+                   standardize_confounds=False,
+                   high_pass=None, low_pass=None,
                    ensure_finite=True)
 
-# To set manually: t_r, mask_img
-clean_defs = Bunch(detrend=False, standardize=False,
-                   low_pass=None, high_pass=None,
-                   ensure_finite=True)
-
-# To set manually: mask_img, t_r
-masker_defs = Bunch(standardize=False,
+# To set manually: mask_img
+masker_defs = Bunch(t_r=None, smoothing_fwhm=None,
+                    standardize=False,
                     standardize_confounds=False,
                     high_variance_confounds=False,
-                    smoothing_fwhm=None,
                     detrend=False,
-                    dtype='f',
-                    low_pass=None, high_pass=None,
-                    allow_overlap=True)
+                    low_pass=None, high_pass=None)
 
 
 # To set manually: frame_times
@@ -34,19 +39,17 @@ design_defs = Bunch(drift_model=None,
 # ``slice_time_ref=0.5`` (FMRIPrep default)
 # Source:
 # https://fmriprep.org/en/stable/api.html?highlight=reference%20slice#fmriprep.config.workflow.slice_time_ref
-glm_defs = Bunch(drift_model=None,
-                 t_r=None,
-                 drift_order=None,
-                 mask_img=False,
+glm_defs = Bunch(drift_model=design_defs['drift_model'],
                  slice_time_ref=0.5,
                  standardize=False,
                  smoothing_fwhm=None,
-                 signal_scaling=0,  # 0, 1, (0, 1) or False
+                 signal_scaling=False,  # 0, 1, (0, 1) or False
                  noise_model='ar1',
-                 hrf_model='spm',
+                 hrf_model=design_defs['hrf_model'],
                  minimize_memory=False)
 
-_params = Bunch(apply_defs=apply_defs,
+_params = Bunch(atlas_defs=atlas_defs,
+                apply_defs=apply_defs,
                 clean_defs=clean_defs,
                 design_defs=design_defs,
                 glm_defs=glm_defs,

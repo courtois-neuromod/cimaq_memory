@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import sys
 from argparse import ArgumentParser
 from docstring_parser import parse as dsparse
 

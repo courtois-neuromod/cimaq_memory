@@ -28,222 +28,40 @@ import zipfile
 
 import numpy as np
 import pandas as pd
-import nistats
 import nilearn
 import scipy
 import nibabel
 
-from numpy import nan as NaN
+from nibabel.nifti1 import Nifti1Image
 from nilearn import image
 from nilearn.glm.first_level import FirstLevelModel
 from nilearn.glm.first_level import make_first_level_design_matrix
-from nibabel.nifti1 import Nifti1Image
+from numpy import nan as NaN
+from os import PathLike
+from pathlib import PosixPath
 from sklearn.utils import Bunch
 from typing import Union
 
-def get_arguments():
-    parser = argparse.ArgumentParser(
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        description="",
-        epilog="""
-        Create trial-unique brain maps of beta coefficients
-        Input: Folders with task file, confounds and fMRI data
-        """)
 
-    parser.add_argument(
-        "-s", "--sdir",
-        required=True, nargs="+",
-        help="Path to id_list.tsv, a list of of subject ids",
-        )
-
-    parser.add_argument(
-        "-t", "--tdir",
-        required=True, nargs="+",
-        help="Folder with task files",
-        )
-
-    parser.add_argument(
-        "-m", "--mdir",
-        required=True, nargs="+",
-        help="Folder with motion files",
-        )
-
-    parser.add_argument(
-        "-f", "--fdir",
-        required=True, nargs="+",
-        help="Folder with fMRI files",
-        )
-
-    parser.add_argument(
-        "-o", "--odir",
-        required=True, nargs="+",
-        help="Output    folder - if doesnt exist it will be created",
-        )
-
-    parser.add_argument(
-        "-v", "--verbose",
-        required=False, nargs="+",
-        help="Verbose to get more information about what's going on",
-        )
-
-    args =  parser.parse_args()
-    if  len(sys.argv) == 1:
-        parser.print_help()
-        sys.exit()
+def preprocess_events(events: Union[str, PathLike, PosixPath,
+                                    pd.DataFrame] = None,
+                      fmri_img: Union[str, PathLike, PosixPath,
+                                      Nifti1Image] = None,
+                      session: Union[dict, Bunch] = None
+                      ) -> pd.DataFrame:
+    if session is not None:
+        events, fmri_img = session.events, session.fmri_img
     else:
-        return args
+        fmri_img = nilearn.image.load_img(fmri_img)
+    t_r, s_task = fmri_img.header.get_zooms()[-1], events.copy(deep=True)
 
-def get_task_Files(slist, tDir):
-    """ Returns a list of task files (one file per participant)
-    for participants whose dccid is listed in slist
-    Parameter:
-    ----------
-    slist: a list of strings (dccids of subjects to include)
-    task_files: list of strings (paths to task files)
-
-    Return:
-    ----------
-    None (beta maps are saved directly in outdir)
-    """
-    # TEST IF THIS PART WORKS: only run subjects if id is on list (argument)
-    if not os.path.exists(tDir):
-        sys.exit('This folder does not exist: {}'.format(tDir))
-        return
-    all_files = glob.glob(os.path.join(tDir,'sub-*events.tsv'))
-    subs = slist.index
-    task_files = []
-    for tfile in all_files:
-        id = os.path.basename(tfile).split('-')[1].split('_')[0]
-        if int(id) in subs:
-            print(id)
-            task_files.append(tfile)
-
-    return task_files
-
-def get_confounds(id, mDir, short_conf):
-    """ Imports a single subject's *confounds.tsv file
-    and returns a pandas dataframe of regressors (motion,
-    slow drift, white matter intensity, frames to scrub, etc.)
-    Parameters:
-    ----------
-    id: string (participant's dccid, Loris identifier)
-    mDir: string (path to directory with *confounds.tsv files)
-    short_conf: boolean (determines which confounds to use in model:
-        False : full set of confounds outputed by NIAK (e.g., slow drift...);
-        True : partial set of Niak confounds, rest is modelled in Nistats )
-
-    Return:
-    ----------
-    confounds: pandas dataframe (regressors for first-level_model)
-    """
-    mfile = glob.glob(os.path.join(mDir, 'fmri_sub'+id+'*confounds.tsv'))
-    if len(mfile) == 0:
-        print('*confounds.tsv file missing for participant '+id)
-        return
-    else:
-        confounds = pd.read_csv(mfile[0], sep='\t')
-
-        if short_conf == True:
-            colsKeep = ['motion_tx', 'motion_ty', 'motion_tz', 'motion_rx',
-            'motion_ry', 'motion_rz', 'scrub', 'wm_avg', 'vent_avg']
-
-            confounds = confounds[colsKeep]
-    return confounds
-
-def extract_events(taskFile, id, outdir, scanDur):
-    """Loads a single subject's task file and returns a pandas
-    dataframe that specifies trial onsets, duration and conditions.
-    Also exports vectors of trial labels as .tsv files (used for
-    classification analyses).
-    Parameters:
-    ----------
-    subFile: string (path to subject's task file)
-    id: string (subject's dccid)
-    outdir: string (ouput directory)
-    scanDur: scan's duration in seconds
-
-    Return:
-    ----------
-    tData: pandas dataframe (events parameters for first-level model)
-    """
-    tData = pd.read_csv(taskFile, sep='\t')
-
-    # rename "trial_type" column as "condition"
-    tData.rename(columns={'trial_type':'condition'}, inplace=True)
-
-    # Add columns to dataframe
-    numCol = tData.shape[1] # number of columns
-    insertCol = [4, numCol+1, numCol+2, numCol+3]
-    colNames = ['trial_type', 'unscanned', 'ctl_miss_hit', 'ctl_miss_ws_cs']
-    colVals = ['TBD', 0, 'TBD', 'TBD']
-    for i in range(0, len(colNames)):
-        tData.insert(loc=insertCol[i], column=colNames[i], value=colVals[i], allow_duplicates=True)
-
-    # The 'unscanned' column flag trials for which
-    # no brain data was acquired : The scan's duration
-    # is shorter than the trial's offset time (0 = data, 1 = no data)
-    for j in tData[tData['offset']>scanDur].index:
-        tData.loc[j, 'unscanned']=1
-
-    # pad trial numbers with zeros (on the left) to preserve trial
-    # temporal order when trials are alphabetized
-    tData['trial_number'] = tData['trial_number'].astype('object', copy=False)
-    for k in tData.index:
-        tData.loc[k, 'trial_number'] = str(tData.loc[k, 'trial_number']).zfill(3)
-
-    # Fill trial_type column, and columns that identify missed, wrong source
-    # and correct source trials.
-    # The "trial_type" column must contain a different entry per trial
-    # to model trials separately (with own beta map) in Nistats.
-    countEnc = 0 # number of encoding trials (normally 78)
-    countCTL = 0 # number of control trials (normally 39)
-    for m in tData[tData['condition']=='Enc'].index:
-        countEnc = countEnc + 1
-        tData.loc[m, 'trial_type'] = 'Enc'+str(countEnc)
-        if tData.loc[m, 'position_accuracy'] == 0:
-            tData.loc[m, 'ctl_miss_hit']='missed'
-            tData.loc[m, 'ctl_miss_ws_cs']='missed'
-        elif tData.loc[m, 'position_accuracy'] == 1:
-            tData.loc[m, 'ctl_miss_hit']='hit'
-            tData.loc[m, 'ctl_miss_ws_cs']='wrongsource'
-        elif tData.loc[m, 'position_accuracy'] == 2:
-            tData.loc[m, 'ctl_miss_hit']='hit'
-            tData.loc[m, 'ctl_miss_ws_cs']='correctsource'
-    for n in tData[tData['condition']=='CTL'].index:
-        countCTL = countCTL + 1
-        tData.loc[n, 'trial_type'] = 'CTL'+str(countCTL)
-        tData.loc[n, 'ctl_miss_hit']='control'
-        tData.loc[n, 'ctl_miss_ws_cs']='control'
-
-    #save extended task file dataframe as .tsv file
-    tData.to_csv(outdir+'/sub-'+id+'_events.tsv',
-    sep='\t', header=True, index=False)
-
-    #keep only trials for which fMRI data was collected
-    tData = tData[tData['unscanned']==0]
-
-    #Save vectors of trial labels (e.g., encoding vs control)
-    #to label trials for classification in later analyses
-    vec1 = tData['condition']
-    vec1.to_csv(outdir+'/sub-'+id+'_enco_ctl.tsv',
-    sep='\t', header=True, index=False)
-
-    vec2 = tData['ctl_miss_hit']
-    vec2.to_csv(outdir+'/sub-'+id+'_ctl_miss_hit.tsv',
-    sep='\t', header=True, index=False)
-
-    vec3 = tData['ctl_miss_ws_cs']
-    vec3.to_csv(outdir+'/sub-'+id+'_ctl_miss_ws_cs.tsv',
-    sep='\t', header=True, index=False)
-
-    # Only keep columns needed to build a design matrix
-    # to input a first-level model in nistats
-    event_cols = ['onset', 'duration', 'trial_type', 'condition', 'ctl_miss_hit',
-    'ctl_miss_ws_cs', 'trial_number']
-
-    tData = tData[event_cols]
-
-    return tData
+    scanDur, numCol = fmri_img.shape[-1]*t_r, s_task.shape[1]
+    s_task['trial_ends'] = s_task.onset+s_task.duration.values    
+    s_task['unscanned'] = (s_task.trial_ends>scanDur).astype(int)
+    npad = len(str(s_task.shape[0]))
+    s_task['trial_number'] = events.index.astype(str).str.zfill(npad)
+    s_task['condition'] = events.trial_number.astype(str)+events.trial_type    
+    return s_task[s_task['unscanned']==0]
 
 
 def sub_tcontrasts1(session:Union[dict,Bunch]=None,
@@ -275,6 +93,7 @@ def sub_tcontrasts1(session:Union[dict,Bunch]=None,
     ----------
     None (beta maps are exported in sub_outdir)
     """
+
     if isinstance(session, dict):
         session = Bunch(**session)
     # Model 1: encoding vs control conditions
@@ -516,52 +335,3 @@ def sub_tcontrasts3(session:Union[dict,Bunch]=None,
         [nibabel.save(*contrast) for contrast in contrasts]
 
     return contrasts
-
-
-def extract_betas(taskList, taskdir, outdir, motiondir, fmridir):
-    """
-    Extracts beta maps for each subject whose task file is in taskList.
-
-    Parameters:
-    ----------
-    taskList: list of strings (each a path to a task file)
-    taskdir: string (path to directory with task files, where save labels)
-    outdir: string (path to output directory)
-    motiondir: sring (path to directory with *confounds.tsv files)
-    fmridir: string (path to directorty for 4D fMRI .nii files)
-
-    Return:
-    ----------
-    None (beta maps are saved directly in outdir)
-    """
-    b_outdir = os.path.join(outdir, 'features', 'beta_maps')
-    if not os.path.exists(b_outdir):
-        os.mkdir(b_outdir)
-
-    ev_outdir = os.path.join(outdir, 'task_files', 'events')
-    if not os.path.exists(ev_outdir):
-        os.mkdir(ev_outdir)
-
-    for tfile in taskList:
-        sub_id = os.path.basename(tfile).split('-')[1].split('_')[0]
-        confounds = get_confounds(sub_id, motiondir, False)
-        scanDur = confounds.shape[0]*2.5 #CIMAQ fMRI TR = 2.5s
-        events = extract_events(tfile, sub_id, ev_outdir, scanDur)
-        get_subject_betas(sub_id, confounds, events, fmridir, b_outdir)
-    return
-
-def main():
-    args =  get_arguments()
-    # sub_list.tsv, a list of subject dccids in .tsv format
-    slist = pd.read_csv(args.sdir[0], sep = '\t')
-    slist.set_index('sub_ids', inplace=True)
-
-    task_dir = args.tdir[0]
-    task_files = get_task_Files(slist, task_dir)
-    motion_dir = args.mdir[0]
-    fmri_dir = args.fdir[0]
-    output_dir = args.odir[0]
-    extract_betas(task_files, task_dir, output_dir, motion_dir, fmri_dir)
-
-if __name__ == '__main__':
-    sys.exit(main())

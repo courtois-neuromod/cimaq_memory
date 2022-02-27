@@ -243,7 +243,7 @@ def extract_events(taskFile, id, outdir, scanDur):
     return tData
 
 def sub_tcontrasts1(id, tr, frame_times, hrf_model, confounds,
-all_events, fmri_img, sub_outdir):
+                    all_events, fmri_img, sub_outdir):
     """Uses nistats first-level model to create maps of beta values
     that correspond to the following contrasts between conditions:
     control, encoding, and encoding_minus_control

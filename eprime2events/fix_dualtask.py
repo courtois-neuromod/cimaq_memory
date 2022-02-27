@@ -1,6 +1,6 @@
 import os
 import pandas as pd
-from argparse import ArgumentParrser
+from argparse import ArgumentParser
 from typing import Union
 from get_desc import get_desc
 from load_recursive import load_recursive
@@ -56,9 +56,9 @@ def fix_dualtask(bids_dir: Union[str,os.PathLike])-> None:
                   bottom[2].unique(),
                   outputs['OldNumber'].unique())
 
-def main()
+def main():
     desc, help_msgs=get_desc(fix_dualtask)
-    parser = ArgumentParrser(prog=fix_dualtask, usage=fix_dualtask.__doc__),
+    parser = ArgumentParser(prog=fix_dualtask, usage=fix_dualtask.__doc__,
                              desc=desc)
     parser.add_argument('bids_dir', nargs=1, help=help_msgs[0])
     args=parser.parse_args()
